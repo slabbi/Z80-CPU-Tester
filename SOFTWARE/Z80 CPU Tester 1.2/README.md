@@ -18,7 +18,7 @@ Software:
 > displaying the test name, the test number is displayed on port A.
 
 
-**After a successfull test it shows the result:**
+**Display of test results:**
 
 **Port B:**
 

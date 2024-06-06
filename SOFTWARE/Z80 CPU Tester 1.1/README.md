@@ -8,7 +8,7 @@ Software:
 - CPU identification
 - tests a few commands (these tests are not really thorough and well thought out and should only be considered as proof of concept)
 
-**After a successfull test it shows the result:**
+**Display of test results:**
 
 **Port B:**
 
