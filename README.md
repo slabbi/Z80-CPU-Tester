@@ -1,5 +1,7 @@
 # Z80-CPU-Tester
 
+<img src="/HARDWARE/pictures/z80cputester_v1.jpg" width="400">
+
 ## General info
 
 This project allows you to test a Z80 CPU.
