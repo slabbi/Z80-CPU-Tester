@@ -1,12 +1,9 @@
 # Z80-CPU-Tester
 
-## Table of contents
-* [General info](#general-info)
-* [Technologies](#technologies)
-
 ## General info
 
 This project allows you to test a Z80 CPU.
+
 It tries
 1. to identify the CPU,
 2. to test whether the CPU is still functional.
@@ -22,7 +19,8 @@ and finally Frank Cringle's Z80 instruction set exerciser
 * https://github.com/begoon/z80exer  (Software, GPL-2.0 license)
 
 [My files are published under MIT license, some files have more permissive licensing.
-Please check the licence files in the relevant directories.]
+Please check the licence files in the relevant directories. When you are interested in
+a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
 
 ## Technologies
 
