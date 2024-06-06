@@ -8,4 +8,4 @@ Use `zmac` to compile the assembler source:
 ```
 zmac --oo cim,hex,lst <file>
 ```
-The cim-File is a binary file that can be used to program a 27C256 EPROM or AT29C256 EEPROM.
+The `cim`-File is a binary file that can be used to program a 27C256 EPROM or AT29C256 EEPROM.
