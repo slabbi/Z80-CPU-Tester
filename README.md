@@ -39,4 +39,7 @@ The required firmware is stored in the SOFTWARE folder. The versioning is as fol
 X.Y:
 * X = for hardware version X
 * Y = firmware no. Y
-Version 1.2 is firmware 2 for hardware 1. A higher version number does not automatically mean a newer or better firmware.
+
+Version 1.2 is firmware 2 for hardware 1.
+
+A higher version number does not automatically mean a newer or better firmware.
