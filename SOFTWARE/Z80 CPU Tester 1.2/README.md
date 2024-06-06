@@ -37,4 +37,4 @@ When testing is completed:
 
 > [!IMPORTANT]
 > **THIS FIRMWARE DOES NOT WORK PROPERLY**
-> The program hangs showing 00000001 (first test).
+> The program hangs showing `00000001` (first test).
