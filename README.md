@@ -37,7 +37,6 @@ The required hardware can be found in the HARDWARE folder. There is currently on
 
 The required firmware is stored in the SOFTWARE folder. The versioning is as follows:
 X.Y:
-X = for hardware version X
-Y = firmware no. Y
-Version 1.2 is firmware 2 for hardware 1.
-A higher version number does not automatically mean a newer or better firmware.
+* X = for hardware version X
+* Y = firmware no. Y
+Version 1.2 is firmware 2 for hardware 1. A higher version number does not automatically mean a newer or better firmware.
