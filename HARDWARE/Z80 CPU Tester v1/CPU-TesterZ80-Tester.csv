@@ -36,7 +36,7 @@
 "U3","Z80CPU","~","DIP_Socket-40_W11.9_W12.7_W15.24_W17.78_W18.5_3M_240-1280-00-0602J","1",""
 "U4,U5,U6","74LS02","~","Package_DIP:DIP-14_W7.62mm_Socket_LongPads","3",""
 "U7","27256","~","Package_DIP:DIP-28_W15.24mm","1",""
-"U8","74ALS990","https://www.ti.com/lit/gpn/sn74als990","Package_DIP:DIP-20_W7.62mm_Socket_LongPads","1",""
+"U8","74ALS990","~","Package_DIP:DIP-20_W7.62mm_Socket_LongPads","1",""
 "U9","61256","~","Package_DIP:DIP-28_W15.24mm","1",""
 "U10","74LS574","~","Package_DIP:DIP-20_W7.62mm_Socket_LongPads","1",""
 "Y1","16MHz","~","Crystal:Crystal_HC49-U_Vertical","1",""
