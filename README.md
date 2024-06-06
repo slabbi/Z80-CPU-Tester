@@ -12,7 +12,8 @@ It tries
 
 This project is based on an idea of 
 * https://oshwlab.com/vitalian1980/z80-tester (Hardware, Public Domain)
-and is based on ideas of
+
+and additionally based on ideas of
 * https://bitbucket.org/rudolff/z80-tester (Software, No license)
 * https://github.com/skiselev/z80-tests (Software, GPL-3.0 license)
 * https://github.com/EtchedPixels/FUZIX/blob/master/Applications/util/cpuinfo-z80.S (Software, GPL-2.0 license)
