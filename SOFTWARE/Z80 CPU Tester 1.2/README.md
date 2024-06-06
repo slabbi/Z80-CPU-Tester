@@ -10,6 +10,7 @@ Software:
 
 > [!IMPORTANT]
 > **THIS FIRMWARE DOES NOT WORK PROPERLY**
+>
 > The CPU identification works fine. After that "Frank Cringle's Z80 
 > instruction set exerciser" code is copied to address $8000 and started.
 > The first test starts but the CPU "hangs" after starting the first test.
@@ -37,4 +38,5 @@ When testing is completed:
 
 > [!IMPORTANT]
 > **THIS FIRMWARE DOES NOT WORK PROPERLY**
+> 
 > The program hangs showing `00000001` (first test).
