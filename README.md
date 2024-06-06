@@ -8,9 +8,9 @@ This project allows you to test a Z80 CPU.
 
 It tries
 1. to identify the CPU,
-2. to test whether the CPU is still functional.
+2. to test whether the CPU is still functional
 
-It has following features:
+and has following features:
 * 32kb EPROM (27C256), alternatively an EEPROM can be used (AT29C256)
 * 32kb SRAM
 * 2 output ports (one bidirectional, read-back mode) with 16 LEDs
