@@ -26,9 +26,9 @@ Please check the licence files in the relevant directories.]
 
 ## Technologies
 
-The project uses [KiCAD](https://www.kicad.org/) and [zmac|http://48k.ca/zmac.html].
+The project uses [KiCAD](https://www.kicad.org/) and [zmac](http://48k.ca/zmac.html).
 
-## Sub-projects / Files
+## Sub-projects
 
 The repository has been divided into several sub-projects.
 
