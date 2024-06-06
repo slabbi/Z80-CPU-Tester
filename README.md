@@ -36,6 +36,7 @@ The repository has been divided into several sub-projects.
 The required hardware can be found in the HARDWARE folder. There is currently only one hardware version (v1).
 
 The required firmware is stored in the SOFTWARE folder. The versioning is as follows:
+
 X.Y:
 * X = for hardware version X
 * Y = firmware no. Y
