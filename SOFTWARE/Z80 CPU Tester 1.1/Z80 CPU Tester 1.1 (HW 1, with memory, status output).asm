@@ -25,6 +25,8 @@
 ;
 ;==================================================================================================
 
+; some constants
+
 CPU_Z80		EQU		0
 CPU_Z180	EQU 	1
 CPU_Z280	EQU		2
@@ -35,7 +37,12 @@ CPU_NEC_CL	EQU		5
 PORTA		EQU		11111110B			; A0 = L / Bit 0 = L
 PORTB		EQU		11111101B			; A1 = L / Bit 1 = L
 
+; some vars in ram
+
 COUNTER		EQU		$8000
+RESULT		EQU		$9000
+
+; some macros
 
 SETLEDA MACRO lednr 
         LD      c, PORTA
@@ -66,6 +73,28 @@ INCCNT	MACRO
 		DELAY
         ENDM
 
+MEMCPY 	MACRO bytes
+		LOCAL	loop
+		LD      b, bytes
+loop:	LD		a, (hl)
+		LD		(de), a
+		DJNZ	loop
+		ENDM
+
+MEMCMP	MACRO bytes, label
+		LOCAL	loop
+		LD		b, bytes
+loop:	LD		a, (de)
+		CP		(hl)
+		JP		nz, label
+		INC		hl
+		INC		de
+		DJNZ	loop
+		ENDM
+
+
+
+		
 ;--------------------------------------------------------------------------------------------------
 ; NO FLASH = NMOS
 ;--------------------------------------------------------------------------------------------------
@@ -411,7 +440,68 @@ test5:
 		CP		l
 		JP		nz, error
 
+; 6: test some multiplation
+
+test6:
+		INCCNT
+		JP		test6_1
+		
+x1:		defw	$1234
+y1:		defw	$5678
+z1:		defd	$06260060
+
+x2:		defw	$FEDC
+y2:		defw	$BA98
+z2:		defd	$B9C32AA0
+		
+test6_1:
+
+		LD		bc, (x1)
+		LD		de, (y1)
+		CALL	mul16
+		LD		(RESULT), hl
+		LD		(RESULT+2), de
+		LD		hl, z1
+		LD		de, RESULT
+		MEMCMP	4, error
+
+		LD		bc, (x2)
+		LD		de, (y2)
+		CALL	mul16
+		LD		(RESULT), hl
+		LD		(RESULT+2), de
+		LD		hl, z2
+		LD		de, RESULT
+		MEMCMP	4, error
+
+
+testsdone:
 		JP		runninglight
+		
+		
+;==================================================================================================
+; some maths functions
+;==================================================================================================
+	
+; Inputs:
+;   DE and BC are factors
+; Outputs:
+;   A is 0
+;   BC is not changed
+;   DE:HL is the product
+mul16:  LD 		hl, 0
+        LD 		a, 16
+ml1:
+        ADD		hl, hl
+        RL 		e
+		RL      d
+        JR		nc, ml2
+        ADD     hl, bc
+        JR      nc, ml2
+        INC		de
+ml2:	DEC		a
+        JR 		nz, ml1
+        ret
 
 ;==================================================================================================
 ; display error
