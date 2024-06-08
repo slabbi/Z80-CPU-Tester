@@ -23,6 +23,8 @@
 ; - the number of the failed test is displayed with a blinking bit 7, or 
 ; - a running light shows a successfull result.
 ;
+; Some math functions from https://learn.cemetech.net/index.php/Z80:Math_Routines
+;
 ;==================================================================================================
 
 ; some constants
@@ -505,6 +507,34 @@ test7_1:
 		LD		de, var_z
 		MEMCMP	8, error
 
+; 8: test some square toots (BIT, RL, ADD, SUB)
+
+test8:
+		INCCNT
+
+		LD		hl, $0400		; sqrt(1024) = 32 (E), 0 (BC)
+		CALL	sqrt
+		LD		a, 32
+		CP		e
+		JP		nz, error
+		XOR		a
+		LD		hl, 0
+		SBC		hl, bc
+		JP		nz, error
+		
+		LD		hl, $FFD0		; sqrt(65488) = 255 (E), 463 (BC)
+		CALL	sqrt
+		LD		a, 255
+		CP		e
+		JP		nz, error
+		XOR		a
+		LD		hl, 463
+		SBC		hl, bc
+		JP		nz, error
+
+
+
+
 testsdone:
 		JP		runninglight
 		
@@ -512,7 +542,50 @@ testsdone:
 ;==================================================================================================
 ; some maths functions
 ;==================================================================================================
-	
+
+; This returns the square root of HL (rounded down).
+; Inputs:
+;	HL
+; Outputs:
+;   BC is the remainder
+;   D is not changed
+;   E is the square root
+;   H is 0
+; Destroys:
+;   A
+;   L is a value of either {0,1,4,5}
+;     every bit except 0 and 2 are always zero
+   
+sqrt:
+		LD 		bc, 0800h
+        LD 		e,c       
+        XOR 	a        
+sqrtloop:
+        ADD		hl, hl    
+        RL 		c         
+        ADC 	hl, hl    
+        RL 		c         
+        JR 		nc, sqrt1
+        SET 	0, l      
+sqrt1:  LD		a, e       
+        ADD 	a, a      
+        LD 		e, a       
+        ADD 	a, a      
+        bit		0, l      
+        JR 		nz, sqrt2
+        SUB		c        
+        JR 		nc, sqrt3
+sqrt2:  LD		a, c   
+        SUB		e    
+        INC		e    
+        SUB		e    
+        LD		c, a   
+sqrt3:  DJNZ 	sqrtloop
+        BIT		0, l      
+        RET 	z        
+        INC		b        
+        RET          
+
 ; Inputs:
 ;   DE and BC are factors
 ; Outputs:
