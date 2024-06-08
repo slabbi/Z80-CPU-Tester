@@ -199,12 +199,18 @@ isnotU880:
 
 ;==================================================================================================
 ; CPU Function Tests
+;
+; It was planned to use the "Frank Cringle's Z80 instruction set exerciser".
+; It seems not to work properly here, so I execure some Z80 code. It does not test
+; all functions completely but it should catch some bad CPUs.
+; There are 32kb rom and 32kb ram available, so please feel free to add/contribute some 
+; reasonable code.
 ;==================================================================================================
 
 		LD		hl, COUNTER
 		LD 		(hl), 0
 
-; test some memory
+; 1: test memory access, 16 bit register load
 		
 test1:
 		INCCNT
@@ -212,37 +218,37 @@ test1:
 		LD		de, $8002
 		LD		bc,	$8003
 
-		XOR		a
+		XOR		a				; clear 3 bytes
 		LD		(hl), a
 		LD		(de), a
 		LD		(bc), a
-		CP		(hl)
+		CP		(hl)			; first byte = 0?
 		JP		nz, error
 		INC		hl
-		CP		(hl)
+		CP		(hl)			; second byte = 0?
 		JP		nz, error
 		INC		hl
-		CP		(hl)
+		CP		(hl)			; third byte = 0?
 		JP		nz, error
 
-		LD		hl, $8001
+		LD		hl, $8001		; now a simple pattern
 		LD		de, $8002
 		LD		bc,	$8003
 		
 		LD		a, 10101010B
-		LD		(hl), a
-		LD		(de), a
-		LD		(bc), a
-		CP		(hl)
-		JP		nz, error
-		INC		hl
-		CP		(hl)
+		LD		(hl), a         ; first byte = pattern?
+		LD		(de), a         
+		LD		(bc), a         
+		CP		(hl)            ; second byte = pattern?
+		JP		nz, error       
+		INC		hl              
+		CP		(hl)            ; third byte = pattern?
 		JP		nz, error
 		INC		hl
 		CP		(hl)
 		JP		nz, error
 
-; test some logic
+; 2: test RL, RR, register to register load
 
 test2:
 		INCCNT
@@ -283,7 +289,7 @@ test2:
 		CP		1				; shoult be 1
 		JP		nz, error		; no
 
-; some maths
+; 3: test ADD, SUB
 
 test3:
 		INCCNT
@@ -301,16 +307,109 @@ test3:
 		CP		$00
 		JP		NZ, error
 
+; 4: test PUSH, POP, 16 bit SBC
+
 test4:
 		INCCNT
-		LD		HL, $1234
-		LD		BC, 0
-		PUSH	HL
-		POP		BC
-		XOR		A
+		LD		hl, $1234
+		LD		bc, 0
+		PUSH	hl
+		POP		bc
+		XOR		a
 		SBC		hl, bc
 		JP		nz, error
 
+		LD		hl, $4321
+		LD		de, 0
+		PUSH	hl
+		POP		de
+		XOR		a
+		SBC		hl, de
+		JP		nz, error
+
+		LD		hl, $4321
+		XOR		a
+		SBC		hl, hl
+		JP		nz, error
+
+; 5: test sub, add, inc, dec
+
+test5:
+		INCCNT
+		LD		hl, $0102
+		LD		de, $0408
+		LD		bc, $1020
+		LD		a, 0
+		ADD		a, h
+		CP		$01
+		JP		nz, error
+		ADD		a, l
+		CP		$03
+		JP		nz, error
+		ADD 	a, d
+		CP		$07
+		JP		nz, error
+		ADD		a, e
+		CP		$0f
+		JP		nz, error
+		ADD     a, b
+		CP		$1f
+		JP		nz, error
+		ADD     a, c
+		CP		$3f
+		JP		nz, error
+		
+		SUB		a, h
+		SUB		a, l
+		SUB 	a, d
+		SUB		a, e
+		SUB     a, b
+		SUB     a, c
+		CP		$00
+		JP		nz, error
+
+		DEC		h
+		DEC		l
+		DEC		d
+		DEC		e
+		DEC		b
+		DEC		c
+
+		LD		a, $00
+		CP		h
+		JP		nz, error
+		LD		a, $01
+		CP		l
+		JP		nz, error
+		LD		a, $03
+		CP		d
+		JP		nz, error
+		LD		a, $07
+		CP		e
+		JP		nz, error
+		LD		a, $0f
+		CP		b
+		JP		nz, error
+		LD		a, $1f
+		CP		c
+		JP		nz, error
+
+		INC		h
+		INC		l
+		INC		d
+		INC		e
+		INC		b
+		INC		c
+
+		ADD 	hl, de
+		ADD 	hl, bc
+
+		LD		a, $15
+		CP		h
+		JP		nz, error
+		LD		a, $2a
+		CP		l
+		JP		nz, error
 
 		JP		runninglight
 
