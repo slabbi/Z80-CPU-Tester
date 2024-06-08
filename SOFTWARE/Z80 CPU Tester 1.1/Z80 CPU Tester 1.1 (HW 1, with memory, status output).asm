@@ -40,7 +40,12 @@ PORTB		EQU		11111101B			; A1 = L / Bit 1 = L
 ; some vars in ram
 
 COUNTER		EQU		$8000
-RESULT		EQU		$9000
+
+var_x 		EQU 	$9000
+var_y 		EQU 	$9004
+var_z 		EQU		$9008
+var_z0 		EQU		$9008
+var_z2 		EQU		$900c
 
 ; some macros
 
@@ -78,6 +83,8 @@ MEMCPY 	MACRO bytes
 		LD      b, bytes
 loop:	LD		a, (hl)
 		LD		(de), a
+		INC		hl
+		INC		de
 		DJNZ	loop
 		ENDM
 
@@ -92,9 +99,6 @@ loop:	LD		a, (de)
 		DJNZ	loop
 		ENDM
 
-
-
-		
 ;--------------------------------------------------------------------------------------------------
 ; NO FLASH = NMOS
 ;--------------------------------------------------------------------------------------------------
@@ -459,21 +463,47 @@ test6_1:
 		LD		bc, (x1)
 		LD		de, (y1)
 		CALL	mul16
-		LD		(RESULT), hl
-		LD		(RESULT+2), de
+		LD		(var_z), hl
+		LD		(var_z+2), de
 		LD		hl, z1
-		LD		de, RESULT
+		LD		de, var_z
 		MEMCMP	4, error
 
 		LD		bc, (x2)
 		LD		de, (y2)
 		CALL	mul16
-		LD		(RESULT), hl
-		LD		(RESULT+2), de
+		LD		(var_z), hl
+		LD		(var_z+2), de
 		LD		hl, z2
-		LD		de, RESULT
+		LD		de, var_z
 		MEMCMP	4, error
 
+; 7: test some 64bit multiplation
+
+test7:
+		INCCNT
+		JP		test7_1
+		
+xx1:	defd	$12345678
+yy1:	defd	$fedcba98
+zz1:	defd	$35068740
+		defd	$121FA00A
+		
+test7_1:
+
+		LD		hl, xx1
+		LD		de, var_x
+		MEMCPY	4
+
+		LD		hl, yy1
+		LD		de, var_y
+		MEMCPY	4
+
+		CALL	mul32			; result $121FA00A_35068740
+
+		LD		hl, zz1
+		LD		de, var_z
+		MEMCMP	8, error
 
 testsdone:
 		JP		runninglight
@@ -502,6 +532,74 @@ ml1:
 ml2:	DEC		a
         JR 		nz, ml1
         ret
+
+mul32:
+; uses karatsuba multiplication
+; var_x * var_y
+; z0 holds the 64-bit result
+		LD 		de, (var_x)
+		LD		bc, (var_y)
+		PUSH	bc
+		CALL 	mul16
+		LD		(var_z0), hl
+		LD		bc, (var_y+2)
+        LD		(var_z0+2), de
+		LD 		de, (var_x+2)
+        PUSH	bc
+        CALL 	mul16
+		LD 		(var_z2), hl
+		LD		(var_z2+2), de
+		XOR		a
+		LD		hl, (var_x)
+		LD		de, (var_x+2)
+		ADD		hl, de
+		RRA
+		POP		de
+		EX		(sp), hl
+		ADD		hl, de
+		POP		bc
+		EX		de, hl
+		PUSH	de
+		PUSH	bc
+		PUSH	af
+        CALL 	mul16
+		EX		de, hl
+		POP		af
+		POP		bc
+		JR		nc, m64_1	; $+3
+		ADD 	hl, bc
+m64_1:	POP		bc
+		RLA
+		JR		nc, m64_2	; $+4 - this is wrong $+5
+		ADD		hl, bc
+		ADC		a, 0
+m64_2:	EX 		de, hl
+		LD		bc, (var_z0)
+		SBC 	hl, bc
+		EX 		de, hl
+		LD		bc, (var_z0+2)
+		SBC		hl, bc
+		SBC		a, 0
+		EX		de, hl
+		LD		bc, (var_z2)
+		SBC		hl, bc
+		EX 		de, hl
+		LD		bc, (var_z2+2)
+		SBC		hl, bc
+		SBC		a, 0
+		LD		b, h
+		LD		c, l
+		LD		hl,(var_z0+2)
+		ADD		hl, de
+		LD		(var_z0+2), hl
+		LD		hl, (var_z2)
+		ADC		hl, bc
+		LD		(var_z2), hl
+		RET		nc
+		LD		hl, (var_z2+2)
+		INC		hl
+		LD		(var_z2+2), hl
+		RET
 
 ;==================================================================================================
 ; display error
