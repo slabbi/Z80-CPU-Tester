@@ -36,8 +36,11 @@ CPU_EZ80	EQU 	3
 CPU_U880	EQU		4
 CPU_NEC_CL	EQU		5
 
-PORTA		EQU		11111110B			; A0 = L / Bit 0 = L
-PORTB		EQU		11111101B			; A1 = L / Bit 1 = L
+PORTA		EQU		11111110B	; A0 = L / Bit 0 = L
+PORTB		EQU		11111101B	; A1 = L / Bit 1 = L
+
+PIDIGITS	EQU		100			; Number of digits to compute (9674 max)
+
 
 ; some vars in ram
 
@@ -161,7 +164,7 @@ startident:
 		JR		z, identified	; yes, it is a Z180
 
 		LD		a, $40
-		BYTE	$cb, $37		; from the Z280 data book
+		defb 	$cb, $37		; from the Z280 data book
 		JP		p, z280_detected	; yes, it is a Z280
 
 ;--------------------------------------------------------------------------------------------------
@@ -207,7 +210,7 @@ identified:
 
         LD      c, 0
 ;       out     (c),0
-        BYTE    $ed, $71      	; CMOS = $FF; NMOS = $00
+        defb    $ed, $71      	; CMOS = $FF; NMOS = $00
 		NOP
 		IN		a,(c)
 
@@ -245,7 +248,9 @@ isnotU880:
 		LD		hl, COUNTER
 		LD 		(hl), 0
 
+;----------------------------------------------------------------------
 ; 1: test memory access, 16 bit register load
+;----------------------------------------------------------------------
 		
 test1:
 		INCCNT
@@ -283,7 +288,9 @@ test1:
 		CP		(hl)
 		JP		nz, error
 
+;----------------------------------------------------------------------
 ; 2: test RL, RR, register to register load
+;----------------------------------------------------------------------
 
 test2:
 		INCCNT
@@ -324,7 +331,9 @@ test2:
 		CP		1				; shoult be 1
 		JP		nz, error		; no
 
+;----------------------------------------------------------------------
 ; 3: test ADD, SUB
+;----------------------------------------------------------------------
 
 test3:
 		INCCNT
@@ -342,7 +351,9 @@ test3:
 		CP		$00
 		JP		NZ, error
 
+;----------------------------------------------------------------------
 ; 4: test PUSH, POP, 16 bit SBC
+;----------------------------------------------------------------------
 
 test4:
 		INCCNT
@@ -367,7 +378,9 @@ test4:
 		SBC		hl, hl
 		JP		nz, error
 
+;----------------------------------------------------------------------
 ; 5: test sub, add, inc, dec
+;----------------------------------------------------------------------
 
 test5:
 		INCCNT
@@ -446,7 +459,9 @@ test5:
 		CP		l
 		JP		nz, error
 
-; 6: test some multiplation
+;----------------------------------------------------------------------
+; 6: test some 16 bit multiplication
+;----------------------------------------------------------------------
 
 test6:
 		INCCNT
@@ -480,7 +495,9 @@ test6_1:
 		LD		de, var_z
 		MEMCMP	4, error
 
-; 7: test some 64bit multiplation
+;----------------------------------------------------------------------
+; 7: test some 64 bit multiplication
+;----------------------------------------------------------------------
 
 test7:
 		INCCNT
@@ -507,7 +524,9 @@ test7_1:
 		LD		de, var_z
 		MEMCMP	8, error
 
+;----------------------------------------------------------------------
 ; 8: test some square toots (BIT, RL, ADD, SUB)
+;----------------------------------------------------------------------
 
 test8:
 		INCCNT
@@ -533,11 +552,24 @@ test8:
 		JP		nz, error
 
 
+;----------------------------------------------------------------------
+; 9: calculate Pi
+;----------------------------------------------------------------------
+
+test9:
+		INCCNT
+		CALL 	calc_pi
+		
+		LD		hl, pi
+		LD		de, READABLE
+		MEMCMP	PIDIGITS, error
+
+
+
 
 
 testsdone:
 		JP		runninglight
-		
 		
 ;==================================================================================================
 ; some maths functions
@@ -709,4 +741,6 @@ left:   SETLEDA a
 		DELAY
 
         JP      runninglight	; continue endless
+
+include picalc.asm
 
