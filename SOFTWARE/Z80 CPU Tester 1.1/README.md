@@ -8,7 +8,7 @@ Software features:
 - CPU identification
 - tests the functionality of a few commands (these tests are not really thorough and well thought out and should only be considered as proof of concept) and executes some more complex routines
 
-##Display of test results
+## Display of test results
 
 **Port B:**
 
