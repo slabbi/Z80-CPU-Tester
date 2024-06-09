@@ -2,13 +2,13 @@
 
 Version 1.1
 
-Requires hardware v1 with 32kb EPROM/EEPROM and 32kb SRAM
+This firmware requires hardware v1 with 32kb EPROM/EEPROM and 32kb SRAM.
 
-Software:
+Software features:
 - CPU identification
-- tests a few commands (these tests are not really thorough and well thought out and should only be considered as proof of concept)
+- tests the functionality of a few commands (these tests are not really thorough and well thought out and should only be considered as proof of concept) and executes some more complex routines
 
-**Display of test results:**
+##Display of test results
 
 **Port B:**
 
