@@ -1,6 +1,8 @@
 ;==================================================================================================
 ; Z80 CPU Tester
 ;
+; v1.1.6
+;
 ; Requires hardware v1 with 32kb EPROM/EEPROM and 32kb SRAM
 ;
 ; Software:
@@ -39,7 +41,8 @@ CPU_NEC_CL	EQU		5
 PORTA		EQU		11111110B	; A0 = L / Bit 0 = L
 PORTB		EQU		11111101B	; A1 = L / Bit 1 = L
 
-PIDIGITS	EQU		100			; Number of digits to compute (9674 max)
+PIDIGITS	EQU		100			; number of digits to compute
+DISKS		EQU 	6			; number of disks to move
 
 
 ; some vars in ram
@@ -64,23 +67,6 @@ SETLEDB MACRO lednr
         LD      c, PORTB
         LD      a, lednr
         OUT     (c),a
-        ENDM
-
-DELAY   MACRO
-		LOCAL 	loop1, loop2
-        LD      h, $ff
-loop1:  LD      l, $ff
-loop2:  DEC     l
-        JP      nz, loop2
-        DEC     h
-        JP      nz, loop1
-        ENDM
-
-INCCNT	MACRO
-		LD		hl, COUNTER
-		INC 	(hl)
-		SETLEDA (hl)
-		DELAY
         ENDM
 
 MEMCPY 	MACRO bytes
@@ -121,15 +107,15 @@ int:	RETI					; interrupt not used
 nmi:	DI						; disable interrupts
 		SETLEDA	0				; port A off
 		SETLEDB	0				; port B off
-		DELAY
+		CALL	delay
 
         LD      b,3				; three times alternating indicators
 fnmi:   SETLEDA 240				; port A = 11110000
 		SETLEDB 15				; port B = 00001111
-		DELAY
+		CALL	delay
 		SETLEDA 15				; port B = 00001111
 		SETLEDB 240				; port B = 11110000
-		DELAY
+		CALL	delay
         DJNZ    fnmi
 	
 start:							; program starts here
@@ -232,8 +218,8 @@ isnotU880:
 
 		LD 		a, d			; output identification flag
 		SETLEDB	a				
-		DELAY
-		DELAY
+		CALL	delay
+		CALL	delay
 
 ;==================================================================================================
 ; CPU Function Tests
@@ -253,7 +239,7 @@ isnotU880:
 ;----------------------------------------------------------------------
 		
 test1:
-		INCCNT
+		CALL 	inccnt
 		LD		hl, $8001
 		LD		de, $8002
 		LD		bc,	$8003
@@ -293,7 +279,7 @@ test1:
 ;----------------------------------------------------------------------
 
 test2:
-		INCCNT
+		CALL 	inccnt
 		XOR		a
 		LD		a, 1			; 1
 		RL		a				
@@ -336,7 +322,7 @@ test2:
 ;----------------------------------------------------------------------
 
 test3:
-		INCCNT
+		CALL 	inccnt
 		XOR		a
 		ADD     01010101B
 		CP		01010101B
@@ -356,7 +342,7 @@ test3:
 ;----------------------------------------------------------------------
 
 test4:
-		INCCNT
+		CALL 	inccnt
 		LD		hl, $1234
 		LD		bc, 0
 		PUSH	hl
@@ -383,7 +369,7 @@ test4:
 ;----------------------------------------------------------------------
 
 test5:
-		INCCNT
+		CALL 	inccnt
 		LD		hl, $0102
 		LD		de, $0408
 		LD		bc, $1020
@@ -464,7 +450,7 @@ test5:
 ;----------------------------------------------------------------------
 
 test6:
-		INCCNT
+		CALL 	inccnt
 		JP		test6_1
 		
 x1:		defw	$1234
@@ -500,7 +486,7 @@ test6_1:
 ;----------------------------------------------------------------------
 
 test7:
-		INCCNT
+		CALL 	inccnt
 		JP		test7_1
 		
 xx1:	defd	$12345678
@@ -529,7 +515,7 @@ test7_1:
 ;----------------------------------------------------------------------
 
 test8:
-		INCCNT
+		CALL 	inccnt
 
 		LD		hl, $0400		; sqrt(1024) = 32 (E), 0 (BC)
 		CALL	sqrt
@@ -553,11 +539,23 @@ test8:
 
 
 ;----------------------------------------------------------------------
-; 9: calculate Pi
+; 9: play Towers of Hanoi
 ;----------------------------------------------------------------------
 
 test9:
-		INCCNT
+		CALL 	inccnt
+		call 	start_hanoi
+		LD		hl, hanoir
+		LD		de, TOHMOVES
+		MEMCMP	(1<<DISKS)-1, error
+
+
+;----------------------------------------------------------------------
+; 10: calculate Pi
+;----------------------------------------------------------------------
+
+test10:
+		CALL 	inccnt			; $320
 		CALL 	calc_pi
 		
 		LD		hl, pi
@@ -707,6 +705,28 @@ m64_2:	EX 		de, hl
 		RET
 
 ;==================================================================================================
+; some helpers
+;==================================================================================================
+
+delay:  PUSH	HL
+        LD      h, $ff
+loop1:  LD      l, $ff
+loop2:  DEC     l
+        JP      nz, loop2
+        DEC     h
+        JP      nz, loop1
+        POP		HL
+		RET
+
+inccnt:	PUSH	HL
+		LD		hl, COUNTER
+		INC 	(hl)
+		SETLEDA (hl)
+		call	delay
+        POP     HL
+		RET
+
+;==================================================================================================
 ; display error
 ;==================================================================================================
 
@@ -715,10 +735,10 @@ error:
 error1:
 		SET		7, a
 		SETLEDA a
-		DELAY
+		CALL	delay
 		RES		7, a
 		SETLEDA a
-		DELAY
+		CALL	delay
 		JR		error1
 
 ;==================================================================================================
@@ -733,14 +753,14 @@ runninglight:
 
 left:   SETLEDA a
         RL      a				; lotate left
-		DELAY
+		CALL	delay
         JR      nc, left		; all bits
         DJNZ    left
 
         SETLEDA 0            	; turn off all LEDs
-		DELAY
+		CALL	delay
 
         JP      runninglight	; continue endless
 
 include picalc.asm
-
+include towersofhanoi.asm
