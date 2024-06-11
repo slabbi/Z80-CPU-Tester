@@ -47,7 +47,12 @@ DISKS		EQU 	6			; number of disks to move
 
 ; some vars in ram
 
-COUNTER		EQU		$8000
+Z80TYPE		EQU		$8000
+ISCMOS		EQU		$8001
+ISU880		EQU		$8002
+COUNTER		EQU		$8003
+
+; used in mul32
 
 var_x 		EQU 	$9000
 var_y 		EQU 	$9004
@@ -123,7 +128,28 @@ start:							; program starts here
 		LD		sp, $ffff		; set stack
 		SETLEDA 0				; port A off
 		SETLEDB 0				; port b off
+		XOR		a
+		LD		(Z80TYPE), a
+		LD		(ISCMOS), a
+		LD		(ISU880), a
+		LD		(COUNTER), a
+		
+;--------------------------------------------------------------------------------------------------
+; CHECK CMOS/NMOS / sets ISCMOS flag
+;--------------------------------------------------------------------------------------------------
 
+        LD      c, 0
+;       out     (c),0
+        defb    $ed, $71      	; CMOS = $FF; NMOS = $00
+		NOP
+		IN		a,(c)
+
+		JP		z, isnmos		; $00, so it is NMOS
+		LD		hl, ISCMOS
+		LD		(hl), $ff
+isnmos:
+		SETLEDA 0
+		
 ;--------------------------------------------------------------------------------------------------
 ; CHECK eZ80
 ;--------------------------------------------------------------------------------------------------
@@ -154,15 +180,21 @@ startident:
 		JP		p, z280_detected	; yes, it is a Z280
 
 ;--------------------------------------------------------------------------------------------------
-; CHECK U880
+; CHECK U880 / sets U880 flag
 ;--------------------------------------------------------------------------------------------------
+
+		LD		hl, ISU880
+		LD		(hl), $ff
 
         LD      hl,$ffff
         LD      bc,$180a
         SCF
         OUTI
 		LD		d, CPU_U880
-        JP      c, identified	; yes, it is a UB880
+        JP      c, identified	; yes, it is a UB880, skip other tests
+
+		LD		hl, ISU880
+		LD		(hl), 0
 
 ;--------------------------------------------------------------------------------------------------
 ; CHECK Z80 vs CLONE / [ S | Z | YF | H || XF | P/V | N | C ]
@@ -188,38 +220,15 @@ z280_detected:
 		LD		d, CPU_Z280		; Z280 identified
 
 ;--------------------------------------------------------------------------------------------------
-; CHECK CMOS/NMOS
+; Finished idetification
 ;--------------------------------------------------------------------------------------------------
 
 identified:
-		LD 		e, 0			; e = 0 for NMOS; e = 1 for CMOS
 
-        LD      c, 0
-;       out     (c),0
-        defb    $ed, $71      	; CMOS = $FF; NMOS = $00
-		NOP
-		IN		a,(c)
+		LD		hl, Z80TYPE
+		LD		(hl), d
+		CALL 	prettyprint		; the functions will take a while, so output the result on port B
 
-		JP		z, isnmos		; $00, so it is NMOS
-		SET     7, d			; set bit 7 to indicate CMOS
-isnmos:
-
-		LD		a, d 			; check identified CPU
-		AND     $0f				; currently lower four bits
-		CP      CPU_U880		; is it a UB880
-		JP      nz, isnotU880	; no, it is not
-		SET		6, d			; set bit 7 to indicate UB880
-isnotU880:
-
-;==================================================================================================
-; STATUS: CU00tttt (C = CMOS, U = UB880, tttt = type)
-; Z80= 0000, Z180= 0001, Z280= 0010, EZ80= 0011, U880= 0100, Clone= 0101
-;==================================================================================================
-
-		LD 		a, d			; output identification flag
-		SETLEDB	a				
-		CALL	delay
-		CALL	delay
 
 ;==================================================================================================
 ; CPU Function Tests
@@ -240,9 +249,9 @@ isnotU880:
 		
 test1:
 		CALL 	inccnt
-		LD		hl, $8001
-		LD		de, $8002
-		LD		bc,	$8003
+		LD		hl, $8101
+		LD		de, $8102
+		LD		bc,	$8103
 
 		XOR		a				; clear 3 bytes
 		LD		(hl), a
@@ -257,9 +266,9 @@ test1:
 		CP		(hl)			; third byte = 0?
 		JP		nz, error
 
-		LD		hl, $8001		; now a simple pattern
-		LD		de, $8002
-		LD		bc,	$8003
+		LD		hl, $8101		; now a simple pattern
+		LD		de, $8102
+		LD		bc,	$8103
 		
 		LD		a, 10101010B
 		LD		(hl), a         ; first byte = pattern?
@@ -564,11 +573,42 @@ test10:
 
 
 
-
+;----------------------------------------------------------------------
+; ALL TESTS FINISHED
+;----------------------------------------------------------------------
 
 testsdone:
+		CALL 	prettyprint		; in case some test has destroyed the output on port B
 		JP		runninglight
-		
+
+
+;==================================================================================================
+; STATUS: CU00tttt (C = CMOS, U = UB880, tttt = type)
+; Z80= 0000, Z180= 0001, Z280= 0010, EZ80= 0011, U880= 0100, Clone= 0101
+;==================================================================================================
+
+prettyprint:
+		LD		a, (Z80TYPE)	; load type
+		LD		d, a
+
+		LD		a, (ISCMOS)		; is CMOS?
+		CP		0
+		jr 		z, ppisnmos		; jump if NMOS 
+		SET     7, d			; set bit 7 to indicate CMOS
+ppisnmos:
+
+		LD		a, (ISU880)		; is U880?
+		CP		0
+		JR      z, ppisnotU880	; jump if not
+		SET		6, d			; set bit 7 to indicate UB880
+ppisnotU880:
+
+		LD 		a, d			; output identification flag
+		SETLEDB	a				
+		CALL	delay
+		CALL	delay
+		RET
+
 ;==================================================================================================
 ; some maths functions
 ;==================================================================================================
