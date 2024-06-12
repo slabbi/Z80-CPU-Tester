@@ -1,7 +1,7 @@
 ;==================================================================================================
 ; Z80 CPU Tester
 ;
-; v1.1.6
+; v1.1.7
 ;
 ; Requires hardware v1 with 32kb EPROM/EEPROM and 32kb SRAM
 ;
@@ -31,12 +31,25 @@
 
 ; some constants
 
-CPU_Z80		EQU		0
-CPU_Z180	EQU 	1
-CPU_Z280	EQU		2
-CPU_EZ80	EQU 	3
-CPU_U880	EQU		4
-CPU_NEC_CL	EQU		5
+CPU_Z80				EQU		0
+CPU_Z180			EQU 	1
+CPU_Z280			EQU		2
+CPU_EZ80			EQU 	3
+CPU_U880NEW			EQU		4
+CPU_U880OLD			EQU 	5
+CPU_SHARPLH5080A	EQU		6
+CPU_NMOSZ80			EQU		7
+CPU_NECD780C		EQU		8
+CPU_KR1858VM1		EQU		9
+CPU_NMOSUNKNOWN		EQU		10
+CPU_CMOSZ80			EQU		11
+CPU_TOSHIBA			EQU		12
+CPU_NECD70008AC		EQU		13
+CPU_CMOSUNKNOWN		EQU		14
+CPU_NEC_CL			EQU		15
+CPU_ERROR			EQU		16
+
+
 
 PORTA		EQU		11111110B	; A0 = L / Bit 0 = L
 PORTB		EQU		11111101B	; A1 = L / Bit 1 = L
@@ -51,6 +64,11 @@ Z80TYPE		EQU		$8000
 ISCMOS		EQU		$8001
 ISU880		EQU		$8002
 COUNTER		EQU		$8003
+
+XFYFCOUNT:	EQU		$8010	; 4 bytes
+XFCOUNT:	EQU 	$8014	; 2 bytes
+YFCOUNT:	EQU 	$8016	; 2 bytes
+XYRESULT:	EQU		$8018	; 1 byte
 
 ; used in mul32
 
@@ -129,10 +147,16 @@ start:							; program starts here
 		SETLEDA 0				; port A off
 		SETLEDB 0				; port b off
 		XOR		a
+		LD 		hl, 0
 		LD		(Z80TYPE), a
 		LD		(ISCMOS), a
 		LD		(ISU880), a
 		LD		(COUNTER), a
+		LD		(XFYFCOUNT), hl
+		LD		(XFYFCOUNT+2), hl
+		LD		(XFCOUNT), hl
+		LD		(YFCOUNT), hl
+		LD		(XYRESULT), a
 		
 ;--------------------------------------------------------------------------------------------------
 ; CHECK CMOS/NMOS / sets ISCMOS flag
@@ -162,7 +186,7 @@ startident:
 		INC		a				; part of long load on eZ80 only
 		
 		LD		d, CPU_EZ80		; d = CPU type, assuming it is EZ880
-		JR		z, identified	; yes, it is a EZ880
+		JP		z, iddone		; yes, it is a EZ880
 
 ;--------------------------------------------------------------------------------------------------
 ; CHECK Z180
@@ -173,7 +197,7 @@ startident:
 		DAA						; Z180 returns $f9, Z80 returns $99
 		CP		$f9				; is Z180?
 		LD		d, CPU_Z180
-		JR		z, identified	; yes, it is a Z180
+		JP		z, iddone		; yes, it is a Z180
 
 		LD		a, $40
 		defb 	$cb, $37		; from the Z280 data book
@@ -190,11 +214,57 @@ startident:
         LD      bc,$180a
         SCF
         OUTI
-		LD		d, CPU_U880
-        JP      c, identified	; yes, it is a UB880, skip other tests
+        JP      c, xyident	; yes, it is a UB880, skip other tests
 
 		LD		hl, ISU880
 		LD		(hl), 0
+
+		JR		xyident
+
+z280_detected:
+		LD		d, CPU_Z280		; Z280 identified
+		JP		iddone
+
+;--------------------------------------------------------------------------------------------------
+; XF/YF identification
+; Tests from https://github.com/skiselev/z80-tests/
+;--------------------------------------------------------------------------------------------------
+
+xyident:
+
+		CALL	textxy
+		LD		d, CPU_ERROR	; should never happen, helps to identify not catched CPUs
+		
+		LD		hl, XYRESULT
+		LD		(hl), a
+
+		LD		a, (ISU880)
+		CP		0				; is U880?
+		JR		z, checkz80		; it is a Z80
+		
+		LD		a, (XYRESULT)	; U880
+		CP		$ff				; is XF/YF always set?
+		LD		d, CPU_U880NEW
+		JP		z, iddone
+		LD		d, CPU_U880OLD
+		JP		iddone
+
+checkz80:
+		LD		a, (ISCMOS)
+		CP		0				; is CMOS?
+		JR		nz, checkcmos	; yes, it is CMOS
+
+; check for Sharp LH5080A
+
+		LD		a, (XYRESULT)
+		CP		$30
+		JP		z, SHARPLH5080A
+		CP 		$FF				; does it always set XF/YF?
+		JP		z, NMOSZ80
+		CP		$fd				; does it sometimes not set XF when FLAGS.3=1?
+		JP		z, NECU780C
+		CP		$f4
+		JP		z, KR1858VM1
 
 ;--------------------------------------------------------------------------------------------------
 ; CHECK Z80 vs CLONE / [ S | Z | YF | H || XF | P/V | N | C ]
@@ -210,23 +280,61 @@ startident:
 		LD		a,c
 		AND		$28				; check $28
 		CP		$28
-		LD		d, CPU_Z80
-		JR		z, identified	; yes, it is a Z80
-	
-		LD		d, CPU_NEC_CL	; it is a clone
-		JR		identified
 
-z280_detected:
-		LD		d, CPU_Z280		; Z280 identified
+		LD		d, CPU_NEC_CL
+		JR		nz, iddone
 
-;--------------------------------------------------------------------------------------------------
-; Finished idetification
-;--------------------------------------------------------------------------------------------------
+		LD		D, CPU_NMOSUNKNOWN
+		JP		iddone
 
-identified:
+SHARPLH5080A:
+		LD		d, CPU_SHARPLH5080A
+		JP		iddone
+NMOSZ80:
+		LD		d, CPU_NMOSZ80
+		JP		iddone
+NECU780C:
+		LD		d, CPU_NECD780C
+		JP		iddone
+KR1858VM1:
+		LD		d, CPU_KR1858VM1
+		JP		iddone
 
+
+checkcmos:
+		LD		a, (XYRESULT)
+		CP		$ff				; does it always set XF/YF?
+		JR		z, CMOSZ80
+		CP		$3f				; does it never set YF when A.5=1?
+		JR		z, TOSHIBA
+
+		CP		$20				; YF is often set when A.5=1?
+		JR		nc, CMOSUNKNOWN	; XYRESULT > 1Fh, not a NEC...
+		AND		$0f				; F.5=1 & A.5=0 and F.3=1 & A.3=0 results
+		CP		$03				; F.5=1 & A.5=0 never result in YF set?
+		JR		c, CMOSUNKNOWN
+		AND		$03				; F.3=1 & A.3=0 results
+		JR		nz, NEC
+
+CMOSUNKNOWN:	
+		LD 		d, CPU_CMOSUNKNOWN
+		JP		iddone
+CMOSZ80:
+		LD 		d, CPU_CMOSZ80
+		JP		iddone
+TOSHIBA:
+		LD		d, CPU_TOSHIBA
+		JP		iddone
+NEC:
+		LD		d, CPU_NECD70008AC
+		JP		iddone
+
+		NOP
+
+iddone:
 		LD		hl, Z80TYPE
 		LD		(hl), d
+		
 		CALL 	prettyprint		; the functions will take a while, so output the result on port B
 
 
@@ -610,6 +718,149 @@ ppisnotU880:
 		RET
 
 ;==================================================================================================
+; TESTXY - Tests how SCF (STC) instruction affects FLAGS.5 (YF) and FLAGS.3 (XF)
+; Input:
+;	None
+; Output:
+;	A[7:6] - YF result of F = 0, A = C | 0x20 & 0xF7
+;	A[5:4] - XF result of F = 0, A = C | 0x08 & 0xDF
+;	A[3:2] - YF result of F = C | 0x20 & 0xF7, A = 0
+;	A[1:0] - XF result of F = C | 0x08 & 0xDF, A = 0
+;	Where the result bits set as follows:
+;	00 - YF/XF always set as 0
+;	11 - YF/XF always set as 1
+;	01 - YF/XF most of the time set as 0
+;	10 - YF/XF most of the time set as 1
+;==================================================================================================
+
+textxy:
+		LD		c, $ff			; loop counter
+	
+testxy1:
+		LD		hl, XFYFCOUNT	; results stored here
+
+; check F = 0, A = C | 0x20 & 0xF7
+		LD		e, $00			; FLAGS = 0
+		LD		a, c
+		OR		$20				; A.5 = 1
+		AND     $f7				; A.3 = 0
+		LD		d, a			; A = C | 0x20 & 0xF7
+		PUSH	de				; PUSH DE TO THE STACK
+		POP		af				; POP A AND FLAGS FROM THE STACK (DE)
+		SCF						; STC, SET CF FLAG, DEPENDING ON THE CPU TYPE THIS
+								; ALSO MIGHT CHANGE YF AND XF FLAGS
+		CALL	storeycount
+
+; check F = 0, A = C | 0x08 & 0xDF
+		LD		e, $00			; FLAGS = 0
+		LD		a, c
+		OR 		$08				; A.3 = 1
+		AND  	$df				; A.5 = 0
+		LD		d, a			; A = C | 0x08 & 0xDF
+		PUSH	de				; PUSH DE TO THE STACK
+		POP		af				; POP A AND FLAGS FROM THE STACK (DE)
+		SCF						; STC, SET CF FLAG, DEPENDING ON THE CPU TYPE THIS
+								; ALSO MIGHT CHANGE YF AND XF FLAGS
+		CALL	storexcount
+
+; check F = C | 0x20 & 0xF7, A = 0
+		LD 		a, c
+		OR 		$20				; FLAGS.5 = 1
+		AND     $f7				; FLAGS.3 = 0
+		LD 		e, a			; FLAGS = C | 0x20 & 0xF7
+		LD		d, $00			; A = 0
+		PUSH	de				; PUSH DE TO THE STACK
+		POP		af				; POP A AND FLAGS FROM THE STACK (DE)
+		SCF						; STC, SET CF FLAG, DEPENDING ON THE CPU TYPE THIS
+								; ALSO MIGHT CHANGE YF AND XF FLAGS
+		CALL	storeycount
+
+; check F = C | 0x08 & 0xDF, A = 0
+		LD 		a, c
+		OR 		$08				; FLAGS.3 = 1
+		AND		$df				; FLAGS.5 = 0
+		LD 		e, a			; FLAGS = C | 0x08 & 0xDF
+		LD      d, $00			; A = 0
+		PUSH	de				; PUSH DE TO THE STACK
+		POP		af				; POP A AND FLAGS FROM THE STACK (DE)
+		SCF						; STC, SET CF FLAG, DEPENDING ON THE CPU TYPE THIS
+								; ALSO MIGHT CHANGE YF AND XF FLAGS
+		CALL	storexcount
+
+		DEC		c
+		JR		nz, testxy1
+	
+		LD		c, 4			; iteration count - number of bytes
+		LD		hl, XFYFCOUNT	; counters
+
+testxy2:
+		RLA						; RAL
+		RLA						; RAL
+		AND		$fc				; zero two least significant bits
+		LD 		b, a			; store A to B
+		LD 		a, (hl)
+		CP		$7f
+		JR		nc,	testxy3		; jump if the count is 0x80 or more
+		CP		0
+		JR		z, testxy5		; the count is 0 leave bits at 0
+		LD		a, 1			; the count is between 1 and 0x7F, set result bits to 01
+		JP		testxy5
+testxy3:
+		CP		$ff
+		LD		a, 2			; the count is between 0x80 and 0xFE, set result bits to 10
+		JR		nz, testxy4
+		LD		a, 3			; the count is 0xFF, set result bits to 11
+		JP		testxy5
+testxy4:
+		LD		a, 1			; the count is 0x7F or less, set result bits to 01
+testxy5:
+		OR		b
+		INC		hl
+		DEC		c
+		JR		nz, testxy2
+		RET
+
+;-------------------------------------------------------------------------
+; STOREXCOUNT - Isolates and stores XF to the byte counter at (HL)
+; Input:
+;	FLAGS	- flags
+;	HL	- pointer to the counters
+; Output:
+;	HL	- incremented by 1 (points to the next counter)
+; Trashes A and DE
+;-------------------------------------------------------------------------
+storexcount:
+		PUSH	af				; transfer flags
+		POP		de				; to E register
+		LD		a, e
+		AND     $08				; isolate XF
+		JR		z, storexdone
+		INC		(hl)			; increment the XF counter (HL)
+storexdone:
+		INC		hl				; point to the next entry
+		RET
+
+;-------------------------------------------------------------------------
+; STOREYCOUNT - Isolates and stores YF to the byte counter at (HL)
+; Input:
+;	FLAGS	- flags
+;	HL	- pointer to the counters
+; Output:
+;	HL	- incremented by 1 (points to the next counter)
+; Trashes A and DE
+;-------------------------------------------------------------------------
+storeycount:
+		PUSH	af				; transfer flags
+		POP		de				; to E register
+		LD		a, e
+		AND     $20				; isolate YF
+		JR		z, storeydone
+		INC		(hl)			; increment the YF counter (HL)
+storeydone:
+		INC		hl				; point to the next entry
+		RET
+
+;==================================================================================================
 ; some maths functions
 ;==================================================================================================
 
@@ -767,7 +1018,7 @@ inccnt:	PUSH	HL
 		RET
 
 ;==================================================================================================
-; display error
+; display error, debug blinking
 ;==================================================================================================
 
 error:
@@ -781,6 +1032,21 @@ error1:
 		CALL	delay
 		JR		error1
 
+debug:
+		SETLEDA 0
+		SETLEDB 0
+		CALL	delay
+		SETLEDA 15
+		SETLEDB 15
+		CALL	delay
+		SETLEDA 240
+		SETLEDB 240
+		CALL	delay
+		SETLEDA 0
+		SETLEDB 0
+		CALL 	delay
+		RET
+		
 ;==================================================================================================
 ; main loop 3x light left
 ;==================================================================================================
