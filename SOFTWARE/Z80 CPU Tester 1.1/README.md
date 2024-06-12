@@ -33,22 +33,22 @@ STATUS: `CU00tttt` (C = CMOS, U = UB880, tttt = type)
 
 Type:
 ```
-`0000` ---
-`0001` Z180
-`0010` Z280
-`0011` EZ80 
-`0100` U880 (new)
-`0101` U880 (old)
-`0110` SHARP LH5080A
-`0111` NMOS Z80
-`1000` NEC D780C
-`1001` KR1858VM1
-`1010` NMOS unknown
-`1011` CMOS Z80
-`1100` Toshiba Z80
-`1101` NEC D70008AC
-`1110` CMOS unknown
-`1111` NEC Clone
+0000 - not used
+0001 - Z180
+0010 - Z280
+0011 - EZ80 
+0100 - U880 (new)
+0101 - U880 (old)
+0110 - SHARP LH5080A
+0111 - NMOS Z80
+1000 - NEC D780C
+1001 - KR1858VM1
+1010 - NMOS unknown
+1011 - CMOS Z80
+1100 - Toshiba Z80
+1101 - NEC D70008AC
+1110 - CMOS unknown
+1111 - NEC Clone
 ```
 
 An identified UB880 displays `0100 0100`.
