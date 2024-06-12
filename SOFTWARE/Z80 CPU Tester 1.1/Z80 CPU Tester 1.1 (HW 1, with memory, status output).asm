@@ -16,8 +16,22 @@
 ;
 ; Port B:
 ; STATUS: CU00tttt (C = CMOS, U = UB880, tttt = type)
-; Z80= 0000, Z180= 0001, Z280= 0010, EZ80= 0011, U880= 0100, Clone= 0101
-; An identified UB880 displays [0100 0100}.
+;   0000 - not used
+;   0001 - Z180
+;   0010 - Z280
+;   0011 - EZ80 
+;   0100 - U880 (newer; MME U880, Thesys Z80, Microelectronica MMN 80CPU)
+;   0101 - U880 (older; MME U880)
+;   0110 - SHARP LH5080A
+;   0111 - NMOS Z80 (Zilog Z80, Zilog Z08400 or similar NMOS CPU, Mosstek MK3880N, SGS/ST Z8400, Sharp LH0080A, KR1858VM1)
+;   1000 - NEC D780C (NEC D780C, GoldStar Z8400, possibly KR1858VM1)
+;   1001 - KR1858VM1 (overclocked)
+;   1010 - Unknown NMOS Z80 Clone
+;   1011 - CMOS Z80 (Zilog Z84C00)
+;   1100 - Toshiba Z80 (Toshiba TMPZ84C00AP, ST Z84C00AB)
+;   1101 - NEC D70008AC
+;   1110 - CMOS unknown
+;   1111 - Unknown CMOS Z80 Clone
 ;
 ; Port A:
 ; Counts the performed tests.
@@ -692,7 +706,6 @@ testsdone:
 
 ;==================================================================================================
 ; STATUS: CU00tttt (C = CMOS, U = UB880, tttt = type)
-; Z80= 0000, Z180= 0001, Z280= 0010, EZ80= 0011, U880= 0100, Clone= 0101
 ;==================================================================================================
 
 prettyprint:
