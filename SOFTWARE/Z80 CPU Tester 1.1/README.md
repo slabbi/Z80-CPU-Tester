@@ -60,3 +60,16 @@ Counts the performed tests.
 When testing is completed:
 - the number of the failed test is displayed with a blinking bit 7, or 
 - a running light shows a successfull result (no error).
+
+## Display XF results and XF/YF counters
+
+The XY result and the XF/XF counters can be displayed by pressing the NMI button.
+
+After pressing the NMI button, the CPU tester will - after a short time - blink three times (alternating "xxxxoooo ooooxxxx" pattern).
+Then consecutively
+- the XF resultn (Port A)
+- the XF counter (Port B/A)
+- the YF counter (Port B/A)
+will be displayed.
+
+The output will be pretty fast (depending on the CPU clock), so you should record the output with your mobile phone to analyze it later.
