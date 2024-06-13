@@ -75,3 +75,5 @@ Then consecutively
 will be displayed.
 
 The output will be pretty fast (depending on the CPU clock), so you should record the output with your mobile phone to analyze it later.
+
+For more information visit [Sergey Kiselev repository](https://github.com/skiselev/z80-tests/blob/main/Results.md).
