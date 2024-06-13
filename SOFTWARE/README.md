@@ -2,7 +2,7 @@
 
 Firmware for Hardware v1:
 * v1.1: CPU identification (very detailed), tests a few commands
-* v1.2: CPU identification, uses "Frank Cringle's Z80 instruction set exerciser"
+* v1.2: CPU identification, uses "Frank Cringle's Z80 instruction set exerciser" (currently not working)
 
 Use `zmac` to compile the assembler source:
 ```
