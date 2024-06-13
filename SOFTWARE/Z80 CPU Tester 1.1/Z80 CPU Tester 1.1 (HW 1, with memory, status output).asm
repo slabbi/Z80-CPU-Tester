@@ -16,22 +16,8 @@
 ;
 ; Port B:
 ; STATUS: CU00tttt (C = CMOS, U = UB880, tttt = type)
-;   0000 - not used
-;   0001 - Z180
-;   0010 - Z280
-;   0011 - EZ80 
-;   0100 - U880 (newer; MME U880, Thesys Z80, Microelectronica MMN 80CPU)
-;   0101 - U880 (older; MME U880)
-;   0110 - SHARP LH5080A
-;   0111 - NMOS Z80 (Zilog Z80, Zilog Z08400 or similar NMOS CPU, Mosstek MK3880N, SGS/ST Z8400, Sharp LH0080A, KR1858VM1)
-;   1000 - NEC D780C (NEC D780C, GoldStar Z8400, possibly KR1858VM1)
-;   1001 - KR1858VM1 (overclocked)
-;   1010 - Unknown NMOS Z80 Clone
-;   1011 - CMOS Z80 (Zilog Z84C00)
-;   1100 - Toshiba Z80 (Toshiba TMPZ84C00AP, ST Z84C00AB)
-;   1101 - NEC D70008AC
-;   1110 - CMOS unknown
-;   1111 - Unknown CMOS Z80 Clone
+; Z80= 0000, Z180= 0001, Z280= 0010, EZ80= 0011, U880= 0100, Clone= 0101
+; An identified UB880 displays [0100 0100}.
 ;
 ; Port A:
 ; Counts the performed tests.
@@ -78,6 +64,7 @@ Z80TYPE		EQU		$8000
 ISCMOS		EQU		$8001
 ISU880		EQU		$8002
 COUNTER		EQU		$8003
+LOCKED		EQU		$8004
 
 XFYFCOUNT:	EQU		$8010	; 4 bytes
 XFCOUNT:	EQU 	$8014	; 2 bytes
@@ -142,19 +129,28 @@ int:	RETI					; interrupt not used
 		ORG $0066				; NMI vector
 
 nmi:	DI						; disable interrupts
-		SETLEDA	0				; port A off
-		SETLEDB	0				; port B off
-		CALL	delay
+		PUSH	af
+		LD		a, (LOCKED)
+		CP		0
+		JR		z, donmi
+		POP		af
+		RETN
 
-        LD      b,3				; three times alternating indicators
-fnmi:   SETLEDA 240				; port A = 11110000
-		SETLEDB 15				; port B = 00001111
-		CALL	delay
-		SETLEDA 15				; port B = 00001111
-		SETLEDB 240				; port B = 11110000
-		CALL	delay
-        DJNZ    fnmi
-	
+donmi:	
+		LD		a, $ff
+		LD		(LOCKED), a
+		PUSH	bc
+		PUSH    de
+		PUSH	hl
+		CALL	nmifunction
+		POP     hl
+		POP		de
+		POP		bc
+		XOR		a
+		LD		(LOCKED), a
+		POP		af
+		RETN
+
 start:							; program starts here
 		IM		1				; interrupt mode 1
 		LD		sp, $ffff		; set stack
@@ -171,6 +167,7 @@ start:							; program starts here
 		LD		(XFCOUNT), hl
 		LD		(YFCOUNT), hl
 		LD		(XYRESULT), a
+		LD		(LOCKED), a
 		
 ;--------------------------------------------------------------------------------------------------
 ; CHECK CMOS/NMOS / sets ISCMOS flag
@@ -245,8 +242,8 @@ z280_detected:
 ;--------------------------------------------------------------------------------------------------
 
 xyident:
+		CALL	testxy		
 
-		CALL	textxy
 		LD		d, CPU_ERROR	; should never happen, helps to identify not catched CPUs
 		
 		LD		hl, XYRESULT
@@ -706,6 +703,7 @@ testsdone:
 
 ;==================================================================================================
 ; STATUS: CU00tttt (C = CMOS, U = UB880, tttt = type)
+; Z80= 0000, Z180= 0001, Z280= 0010, EZ80= 0011, U880= 0100, Clone= 0101
 ;==================================================================================================
 
 prettyprint:
@@ -746,7 +744,7 @@ ppisnotU880:
 ;	10 - YF/XF most of the time set as 1
 ;==================================================================================================
 
-textxy:
+testxy:
 		LD		c, $ff			; loop counter
 	
 testxy1:
@@ -1080,6 +1078,118 @@ left:   SETLEDA a
 		CALL	delay
 
         JP      runninglight	; continue endless
+
+;==================================================================================================
+; NMI function
+;==================================================================================================
+
+nmifunction:
+		SETLEDA	0				; port A off
+		SETLEDB	0				; port B off
+		CALL	delay
+		CALL	testflags
+
+        LD      b,3				; three times alternating indicators
+fnmi:   SETLEDA 240				; port A = 11110000
+		SETLEDB 15				; port B = 00001111
+		CALL	delay
+		SETLEDA 15				; port B = 00001111
+		SETLEDB 240				; port B = 11110000
+		CALL	delay
+		CALL	delay
+        DJNZ    fnmi
+
+		SETLEDA	0				; port A off
+		SETLEDB	0				; port B off
+		CALL	delay
+
+		LD		hl, XYRESULT	; load XY result
+		SETLEDA	(hl)
+		CALL	delay
+		CALL	delay
+
+		SETLEDA	0				; port A off
+		SETLEDB	0				; port B off
+		CALL	delay
+
+		LD		hl, XFCOUNT		; load XF counter
+		SETLEDA	(hl)
+		INC     hl
+		SETLEDB	(hl)
+		CALL	delay
+		CALL	delay
+		
+		SETLEDA	0				; port A off
+		SETLEDB	0				; port B off
+		CALL	delay
+
+		LD		hl, YFCOUNT		; load YF counter
+		SETLEDA	(hl)
+		INC     hl
+		SETLEDB	(hl)
+		CALL	delay
+		CALL	delay
+		
+		SETLEDA	0				; port A off
+		SETLEDB	0				; port B off
+		CALL	delay
+
+		RET
+
+;--------------------------------------------------------------------------------------------------
+; tests how scf affects YF and XF flags
+; tests from https://github.com/skiselev/z80-tests/
+;--------------------------------------------------------------------------------------------------
+
+testflags:
+		LD		HL, 0
+		LD		(XFCOUNT), hl
+		LD		(YFCOUNT), hl
+		LD		d, 0
+tfloop1:
+		LD		e, 0
+tfloop2:
+		PUSH	de
+		PUSH	de				; PUSH DE TO THE STACK
+		POP		af				; POP A AND FLAGS FROM THE STACK (DE)
+		CCF						; CMC; SET CF FLAG, DEPENDING ON THE CPU TYPE THIS
+								; ALSO MIGHT CHANGE YF AND XF FLAGS
+		PUSH	af				; STORE A AND F
+		POP		de				; NEW FLAGS IN E
+		LD		a, e			; FLAGS TO ACCUMULATOR
+		POP		de
+
+		LD		hl, XFCOUNT		; POINT TO XF COUNTER
+		RRCA					; RRC; BIT 3 TO CF
+		RRCA
+		RRCA
+		RRCA
+		JR		nc, tfloop4
+		INC     (hl)
+		JR		nz, tfloop4		; NO OVERFLOW
+		INC		hl				; MOVE TO THE HIGH BIT
+		INC		(hl)			; INCREMENT HIGHER BIT
+
+tfloop4:
+		LD		hl, YFCOUNT		; POINT TO YF COUNTER
+		RRCA					; BIT 5 TO CF
+		RRCA
+		JR 		nc, tfloop5
+		INC 	(hl)			; INCREMENT COUNTER IF FLAG IS SET
+		JR 		nz, tfloop5		; NO OVERFLOW
+		INC		hl				; MOVE TO THE HIGH BIT
+		INC     (hl)			; INCREMENT HIGHER BIT
+
+tfloop5:
+		INC		e
+		JR		nz, tfloop2
+		INC     d				; INCREMENT D
+		JR      nz, tfloop1
+		RET
+
+;==================================================================================================
+; Includes
+;==================================================================================================
 
 include picalc.asm
 include towersofhanoi.asm
