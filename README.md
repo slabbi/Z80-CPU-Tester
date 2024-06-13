@@ -24,6 +24,7 @@ This project is based on an idea of
 
 and additionally based on ideas of
 * https://bitbucket.org/rudolff/z80-tester (Software, No license)
+* https://github.com/djtersteegc/z80-cmos-nmos-tester (MIT license)
 * https://github.com/skiselev/z80-tests (Software, GPL-3.0 license)
 * https://github.com/EtchedPixels/FUZIX/blob/master/Applications/util/cpuinfo-z80.S (Software, GPL-2.0 license)
 * https://groups.google.com/g/retro-comp/c/rhKeKpXmAXM (Software)
