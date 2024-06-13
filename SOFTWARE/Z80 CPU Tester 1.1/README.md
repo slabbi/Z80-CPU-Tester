@@ -67,9 +67,11 @@ The XY result and the XF/XF counters can be displayed by pressing the NMI button
 
 After pressing the NMI button, the CPU tester will - after a short time - blink three times (alternating "xxxxoooo ooooxxxx" pattern).
 Then consecutively
-- the XF resultn (Port A)
+
+- the XF result (Port A)
 - the XF counter (Port B/A)
 - the YF counter (Port B/A)
+
 will be displayed.
 
 The output will be pretty fast (depending on the CPU clock), so you should record the output with your mobile phone to analyze it later.
