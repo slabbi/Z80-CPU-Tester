@@ -352,18 +352,17 @@ iddone:
 ;==================================================================================================
 ; CPU Function Tests
 ;
-; It was planned to use the "Frank Cringle's Z80 instruction set exerciser".
-; It seems not to work properly here, so I execure some Z80 code. It does not test
-; all functions completely but it should catch some bad CPUs.
+; This does not test all functions completely but it should catch some bad CPUs.
 ; There are 32kb rom and 32kb ram available, so please feel free to add/contribute some 
 ; reasonable code.
+;
 ;==================================================================================================
 
 		LD		hl, COUNTER
 		LD 		(hl), 0
 
 ;----------------------------------------------------------------------
-; 1: test memory access, 16 bit register load
+; 1: tests memory access, 16 bit register load
 ;----------------------------------------------------------------------
 		
 test1:
@@ -403,7 +402,7 @@ test1:
 		JP		nz, error
 
 ;----------------------------------------------------------------------
-; 2: test RL, RR, register to register load
+; 2: tests RL, RR, register to register load
 ;----------------------------------------------------------------------
 
 test2:
@@ -446,7 +445,7 @@ test2:
 		JP		nz, error		; no
 
 ;----------------------------------------------------------------------
-; 3: test ADD, SUB
+; 3: tests ADD, SUB
 ;----------------------------------------------------------------------
 
 test3:
@@ -466,7 +465,7 @@ test3:
 		JP		NZ, error
 
 ;----------------------------------------------------------------------
-; 4: test PUSH, POP, 16 bit SBC
+; 4: tests PUSH, POP, 16 bit SBC
 ;----------------------------------------------------------------------
 
 test4:
@@ -493,7 +492,7 @@ test4:
 		JP		nz, error
 
 ;----------------------------------------------------------------------
-; 5: test sub, add, inc, dec
+; 5: tests sub, add, inc, dec
 ;----------------------------------------------------------------------
 
 test5:
@@ -574,7 +573,7 @@ test5:
 		JP		nz, error
 
 ;----------------------------------------------------------------------
-; 6: test some 16 bit multiplication
+; 6: tests some 16 bit multiplication
 ;----------------------------------------------------------------------
 
 test6:
@@ -610,7 +609,7 @@ test6_1:
 		MEMCMP	4, error
 
 ;----------------------------------------------------------------------
-; 7: test some 64 bit multiplication
+; 7: tests some 64 bit multiplication
 ;----------------------------------------------------------------------
 
 test7:
@@ -639,7 +638,7 @@ test7_1:
 		MEMCMP	8, error
 
 ;----------------------------------------------------------------------
-; 8: test some square toots (BIT, RL, ADD, SUB)
+; 8: tests some square roots (BIT, RL, ADD, SUB)
 ;----------------------------------------------------------------------
 
 test8:
@@ -667,7 +666,7 @@ test8:
 
 
 ;----------------------------------------------------------------------
-; 9: play Towers of Hanoi
+; 9: plays Towers of Hanoi
 ;----------------------------------------------------------------------
 
 test9:
@@ -679,7 +678,7 @@ test9:
 
 
 ;----------------------------------------------------------------------
-; 10: calculate Pi
+; 10: calculates Pi
 ;----------------------------------------------------------------------
 
 test10:
@@ -703,7 +702,6 @@ testsdone:
 
 ;==================================================================================================
 ; STATUS: CU00tttt (C = CMOS, U = UB880, tttt = type)
-; Z80= 0000, Z180= 0001, Z280= 0010, EZ80= 0011, U880= 0100, Clone= 0101
 ;==================================================================================================
 
 prettyprint:
