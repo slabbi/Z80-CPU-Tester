@@ -13,7 +13,7 @@ It tries
 and has following features:
 * 32kb EPROM (27C256), alternatively an EEPROM can be used (AT29C256)
 * 32kb SRAM
-* 2 output ports (one bidirectional, read-back mode) with 16 LEDs
+* 2 output ports (one unidirectional, read-back mode) with 16 LEDs
 * RESET and NMI button
 * 16 MHz / 20 MHz switchable
 * 1, 1/2, 1/4, 1/8, 1/16 multiplicator (1-16 MHz / 1.25-20 MHz)
