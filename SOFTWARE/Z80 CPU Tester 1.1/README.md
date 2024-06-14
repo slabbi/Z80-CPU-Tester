@@ -53,6 +53,9 @@ Type:
 
 An identified UB880 displays `0100 0100`.
 
+Some Notes:
+- Sharp LH5080A - the CMOS Sharp Z80 variant "fails" the CMOS test, and the undocumented OUT (C),0 instruction behaves the same way it does on NMOS CPUs.
+
 **Port A:**
 
 Counts the performed tests.
