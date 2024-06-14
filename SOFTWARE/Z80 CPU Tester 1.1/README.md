@@ -48,7 +48,7 @@ Type:
 1100 - Toshiba Z80 (Toshiba TMPZ84C00AP, ST Z84C00AB)
 1101 - NEC D70008AC
 1110 - Unknown CMOS Z80 Clone
-1111 - NEC Z80 Clone
+1111 - NEC Z80 Clone (NMOS)
 ```
 
 An identified UB880 displays `0100 0100` (Port B).
