@@ -74,7 +74,7 @@ Then consecutively
 - the XFRESULT (Port A)
 - the XFCOUNTER (Port B/A)
 - the YFCOUNTER (Port B/A)
-- the FLAGS result (Port A) for AF=00FF / F & $28
+- the FLAGS result (Port A) for A = 0, F = FF / (result can be $00, $08, $20, $28)
 
 will be displayed.
 
@@ -84,13 +84,15 @@ For more information visit [Sergey Kiselev repository](https://github.com/skisel
 
 ## XFRESULT encoding
 
-- A[7:6] - YF result of F = 0, A = C | 0x20 & 0xF7
-- A[5:4] - XF result of F = 0, A = C | 0x08 & 0xDF
-- A[3:2] - YF result of F = C | 0x20 & 0xF7, A = 0
-- A[1:0] - XF result of F = C | 0x08 & 0xDF, A = 0
+- `A[7:6]` - YF result of `F = 0, A = C | 0x20 & 0xF7` (F.5 set, F.3 reset)
+- `A[5:4]` - XF result of `F = 0, A = C | 0x08 & 0xDF` (F.3 set, F.5 reset)
+- `A[3:2]` - YF result of `F = C | 0x20 & 0xF7, A = 0` (F.5 set, F.3 reset)
+- `A[1:0]` - XF result of `F = C | 0x08 & 0xDF, A = 0` (F.3 set, F.5 reset)
 
 Where the result bits set as follows:
-- `00` - YF/XF always set as 0
-- `11` - YF/XF always set as 1
-- `01` - YF/XF most of the time set as 0
-- `10` - YF/XF most of the time set as 1
+- `00` - flag always set as 0
+- `11` - flag always set as 1
+- `01` - flag most of the time set as 0
+- `10` - flag most of the time set as 1
+
+Note: YF aka F.5, XF aka F.3
