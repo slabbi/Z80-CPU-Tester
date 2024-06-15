@@ -11,15 +11,16 @@ Software features:
 ## Performed tests
 
 Following tests are performed:
-1. memory access, load 16 bit register load, load register to register
-2. RL, RR
-3. ADD, SUB, SBC, INC, DEC
-4. PUSH, POP
-5. some 16 bit multiplications (ADD, RL)
-6. some 32 bit multiplications (ADD, ADC, SBC, PUSH, POP, RRA, EX)
-7. calculates some square roots (BIT, RL, ADD, SUB)
-8. plays Towers of Hanoi (PUSH, POP, CALL)
-9. calculates Pi (EX, EXX, IX, IY, INC, DEC, ADD, ADC, SBC, SRL, RR, PUSH, CALL)
+1. memory access, load 16 bit register load
+2. RL, RR, load register to register
+3. ADD, SUB
+4. PUSH, POP, SBC
+5. ADD, SUB, INC, DEC
+6. some 16 bit multiplications (ADD, RL)
+7. some 32 bit multiplications (ADD, ADC, SBC, PUSH, POP, RRA, EX)
+8. calculates some square roots (BIT, RL, ADD, SUB)
+9. plays Towers of Hanoi (PUSH, POP, CALL)
+10. calculates Pi (EX, EXX, IX, IY, INC, DEC, ADD, ADC, SBC, SRL, RR, PUSH, CALL)
 
 Pi is calculated to 100 digits. This takes about 30 seconds at 4 Mhz.
 When you test CPUs at lower speeds the number of calculated digits
