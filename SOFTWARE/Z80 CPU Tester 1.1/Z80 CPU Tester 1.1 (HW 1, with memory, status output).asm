@@ -70,6 +70,7 @@ XFYFCOUNT:	EQU		$8010	; 4 bytes
 XFCOUNT:	EQU 	$8014	; 2 bytes
 YFCOUNT:	EQU 	$8016	; 2 bytes
 XYRESULT:	EQU		$8018	; 1 byte
+XY_00FF:	EQU		$8019	; 1 byte
 
 ; used in mul32
 
@@ -168,7 +169,7 @@ start:							; program starts here
 		LD		(YFCOUNT), hl
 		LD		(XYRESULT), a
 		LD		(LOCKED), a
-		
+
 ;--------------------------------------------------------------------------------------------------
 ; CHECK CMOS/NMOS / sets ISCMOS flag
 ;--------------------------------------------------------------------------------------------------
@@ -253,6 +254,10 @@ xyident:
 		CP		0				; is U880?
 		JR		z, checkz80		; it is a Z80
 		
+;--------------------------------------------------------------------------------------------------
+; U880 CPU Identification
+;--------------------------------------------------------------------------------------------------
+
 		LD		a, (XYRESULT)	; U880
 		CP		$ff				; is XF/YF always set?
 		LD		d, CPU_U880NEW
@@ -265,10 +270,12 @@ checkz80:
 		CP		0				; is CMOS?
 		JR		nz, checkcmos	; yes, it is CMOS
 
-; check for Sharp LH5080A
+;--------------------------------------------------------------------------------------------------
+; NMOS CPU Identification
+;--------------------------------------------------------------------------------------------------
 
 		LD		a, (XYRESULT)
-		CP		$30
+		CP		$30				; check for Sharp LH5080A
 		JP		z, SHARPLH5080A
 		CP 		$FF				; does it always set XF/YF?
 		JP		z, NMOSZ80
@@ -281,19 +288,15 @@ checkz80:
 ; CHECK Z80 vs CLONE / [ S | Z | YF | H || XF | P/V | N | C ]
 ;--------------------------------------------------------------------------------------------------
 
-		LD		bc, $00ff
-		PUSH	bc
-		POP		af				; F is now 0xFF, A is 0 -> now play with XF and YF
-		SCF						; will give 0 for NEC clones, 28 for Zilog
-		NOP						; (Turbo R will also show 28)
-		PUSH	af
-		pop		bc				; get AF register
-		LD		a,c
-		AND		$28				; check $28
-		CP		$28
-
+		CALL	testxy_00ff		; loads AF=00FF, A = (F & $28)
+;		CP		$28				; Zilog has $28, NEC has $20 or $00 (also $08 for NEC?)
+;		LD		d, CPU_NEC_CL
+;		JR		nz, iddone
 		LD		d, CPU_NEC_CL
-		JR		nz, iddone
+		CP		$20				; Zilog has $28, NEC has $20 or $00 (also $08 for NEC?)
+		JR		z, iddone
+		CP		$00
+		JR		z, iddone
 
 		LD		D, CPU_NMOSUNKNOWN
 		JP		iddone
@@ -311,6 +314,9 @@ KR1858VM1:
 		LD		d, CPU_KR1858VM1
 		JP		iddone
 
+;--------------------------------------------------------------------------------------------------
+; CMOS CPU Identification
+;--------------------------------------------------------------------------------------------------
 
 checkcmos:
 		LD		a, (XYRESULT)
@@ -341,6 +347,7 @@ NEC:
 		JP		iddone
 
 		NOP
+
 
 iddone:
 		LD		hl, Z80TYPE
@@ -1086,6 +1093,7 @@ nmifunction:
 		SETLEDB	0				; port B off
 		CALL	delay
 		CALL	testflags
+		CALL 	testxy_00ff
 
         LD      b,3				; three times alternating indicators
 fnmi:   SETLEDA 240				; port A = 11110000
@@ -1125,6 +1133,15 @@ fnmi:   SETLEDA 240				; port A = 11110000
 		SETLEDA	(hl)
 		INC     hl
 		SETLEDB	(hl)
+		CALL	delay
+		CALL	delay
+		
+		SETLEDA	0				; port A off
+		SETLEDB	0				; port B off
+		CALL	delay
+
+		LD		hl, XY_00FF		; load 00FF results
+		SETLEDA	(hl)
 		CALL	delay
 		CALL	delay
 		
@@ -1184,6 +1201,20 @@ tfloop5:
 		INC     d				; INCREMENT D
 		JR      nz, tfloop1
 		RET
+
+testxy_00ff:
+		LD		bc, $00ff
+		PUSH	bc
+		POP		af				; F is now 0xFF, A is 0 -> now play with XF and YF
+		SCF						; will give 0 for NEC clones, 28 for Zilog
+		NOP
+		PUSH	af
+		POP		bc				; get AF register
+		LD		a,c
+		AND		$28				; check $28
+		LD		(XY_00FF), a
+		RET
+
 
 ;==================================================================================================
 ; Includes

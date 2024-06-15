@@ -68,15 +68,29 @@ When testing is completed:
 
 The XY result and the XF/XF counters can be displayed by pressing the NMI button.
 
-After pressing the NMI button, the CPU tester will - after a short time - blink three times (alternating "xxxxoooo ooooxxxx" pattern).
+After pressing the NMI button, the CPU tester will - after a short time - blink three times (alternating "xxxxoooo ooooxxxx" patterns).
 Then consecutively
 
-- the XF result (Port A)
-- the XF counter (Port B/A)
-- the YF counter (Port B/A)
+- the XFRESULT (Port A)
+- the XFCOUNTER (Port B/A)
+- the YFCOUNTER (Port B/A)
+- the FLAGS result (Port A) for AF=00FF / F & $28
 
 will be displayed.
 
 The output will be pretty fast (depending on the CPU clock), so you should record the output with your mobile phone to analyze it later.
 
 For more information visit [Sergey Kiselev repository](https://github.com/skiselev/z80-tests/blob/main/Results.md).
+
+## XFRESULT encoding
+
+- A[7:6] - YF result of F = 0, A = C | 0x20 & 0xF7
+- A[5:4] - XF result of F = 0, A = C | 0x08 & 0xDF
+- A[3:2] - YF result of F = C | 0x20 & 0xF7, A = 0
+- A[1:0] - XF result of F = C | 0x08 & 0xDF, A = 0
+
+Where the result bits set as follows:
+- `00` - YF/XF always set as 0
+- `11` - YF/XF always set as 1
+- `01` - YF/XF most of the time set as 0
+- `10` - YF/XF most of the time set as 1
