@@ -61,5 +61,5 @@ A higher version number does not automatically mean a newer or better firmware.
 
 Zilog Z84C0020PEC from a Chinese marketplace. It is a U880 (runs with 10 MHz):
 
-<img src="/HARDWARE/pictures/Fake Zilog Z84C0020PEC - U880.jpg" width="400">
+<img src="/HARDWARE/pictures/Fake Zilog Z84C0020PEC - U880.jpg" width="300">
 
