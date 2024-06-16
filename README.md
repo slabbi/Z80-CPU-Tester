@@ -28,6 +28,7 @@ and additionally based on ideas of
 * https://github.com/skiselev/z80-tests (Software, GPL-3.0 license)
 * https://github.com/EtchedPixels/FUZIX/blob/master/Applications/util/cpuinfo-z80.S (Software, GPL-2.0 license)
 * https://groups.google.com/g/retro-comp/c/rhKeKpXmAXM (Software)
+* https://www.malinov.com/sergeys-blog/z80-type-detection.html
 and finally Frank Cringle's Z80 instruction set exerciser
 * https://github.com/begoon/z80exer  (Software, GPL-2.0 license)
 
