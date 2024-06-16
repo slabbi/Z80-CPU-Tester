@@ -1,7 +1,7 @@
 ;==================================================================================================
 ; Z80 CPU Tester
 ;
-; v1.1.7
+; v1.1.9
 ;
 ; Requires hardware v1 with 32kb EPROM/EEPROM and 32kb SRAM
 ;
@@ -326,12 +326,15 @@ checkcmos:
 		JR		z, TOSHIBA
 
 		CP		$20				; YF is often set when A.5=1?
-		JR		nc, CMOSUNKNOWN	; XYRESULT > 1Fh, not a NEC...
+		JR		nc, CMOSUNKNOWN	; XYRESULT > $1F, not a NEC...
+;		XFRESULT <= $1F
 		AND		$0f				; F.5=1 & A.5=0 and F.3=1 & A.3=0 results
 		CP		$03				; F.5=1 & A.5=0 never result in YF set?
-		JR		c, CMOSUNKNOWN
+		JR		c, CMOSUNKNOWN  ; XYRESULT <= $02, not a NEC... ($02, $01, $00)
+; here we have following results ($03, 04, ..., 1f)
 		AND		$03				; F.3=1 & A.3=0 results
-		JR		nz, NEC
+		JR		nz, NEC			; XYRESULT <> $03, it is a NEC... ($x0, $x1, $x2)
+; here we have following results ($03, $0B)
 
 CMOSUNKNOWN:	
 		LD 		d, CPU_CMOSUNKNOWN
