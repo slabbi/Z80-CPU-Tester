@@ -45,17 +45,9 @@ The project uses [KiCAD](https://www.kicad.org/) and [zmac](http://48k.ca/zmac.h
 
 The repository has been divided into several sub-projects.
 
-The required hardware can be found in the HARDWARE folder. There is currently only one hardware version (v1).
+The required hardware can be found in the HARDWARE folder.
 
-The required firmware is stored in the SOFTWARE folder. The versioning is as follows:
-
-X.Y:
-* X = for hardware version X
-* Y = firmware no. Y
-
-Version 1.2 is firmware 2 for hardware 1.
-
-A higher version number does not automatically mean a newer or better firmware.
+The required firmware is stored in the SOFTWARE folder.
 
 ## Examples
 
