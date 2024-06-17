@@ -1,7 +1,7 @@
 ;==================================================================================================
 ; Z80 CPU Tester
 ;
-; v1.1.9
+; v1.1.10
 ;
 ; Requires hardware v1 with 32kb EPROM/EEPROM and 32kb SRAM
 ;
@@ -16,8 +16,23 @@
 ;
 ; Port B:
 ; STATUS: CU00tttt (C = CMOS, U = UB880, tttt = type)
-; Z80= 0000, Z180= 0001, Z280= 0010, EZ80= 0011, U880= 0100, Clone= 0101
-; An identified UB880 displays [0100 0100}.
+;   0000 - not used
+;   0001 - Z180
+;   0010 - Z280
+;   0011 - EZ80 
+;   0100 - U880 (newer; MME U880, Thesys Z80, Microelectronica MMN 80CPU)
+;   0101 - U880 (older; MME U880)
+;   0110 - SHARP LH5080
+;   0111 - NMOS Z80 (Zilog Z80, Zilog Z08400 or similar NMOS CPU, Mosstek MK3880N, SGS/ST Z8400, Sharp LH0080A, KR1858VM1)
+;   1000 - NEC D780C (NEC D780C, GoldStar Z8400, possibly KR1858VM1)
+;   1001 - KR1858VM1 (overclocked)
+;   1010 - Unknown NMOS Z80 Clone
+;   1011 - CMOS Z80 (Zilog Z84C00)
+;   1100 - Toshiba Z80 (Toshiba TMPZ84C00AP, ST Z84C00AB)
+;   1101 - NEC D70008AC
+;   1110 - Unknown CMOS Z80 Clone
+;   1111 - NEC Z80 Clone (NMOS)
+; An identified UB880 displays [01 00 0100}.
 ;
 ; Port A:
 ; Counts the performed tests.
@@ -630,20 +645,33 @@ xx1:	defd	$12345678
 yy1:	defd	$fedcba98
 zz1:	defd	$35068740
 		defd	$121FA00A
-		
+
+xx2:	defd	$70F070F0
+yy2:	defd	$AA55AA55
+zz2:	defd	$0A84DFB0
+		defd	$4B2575FA
+
 test7_1:
 
 		LD		hl, xx1
 		LD		de, var_x
 		MEMCPY	4
-
 		LD		hl, yy1
 		LD		de, var_y
 		MEMCPY	4
-
 		CALL	mul32			; result $121FA00A_35068740
-
 		LD		hl, zz1
+		LD		de, var_z
+		MEMCMP	8, error
+
+		LD		hl, xx2
+		LD		de, var_x
+		MEMCPY	4
+		LD		hl, yy2
+		LD		de, var_y
+		MEMCPY	4
+		CALL	mul32			; result $4B2575FA_0A84DFB0
+		LD		hl, zz2
 		LD		de, var_z
 		MEMCMP	8, error
 
@@ -654,25 +682,32 @@ test7_1:
 test8:
 		CALL 	inccnt
 
-		LD		hl, $0400		; sqrt(1024) = 32 (E), 0 (BC)
-		CALL	sqrt
-		LD		a, 32
-		CP		e
+		LD		hl, $0400		; sqrt(1024) = 32 (A), 0 (HL)
+		CALL 	sqrtHL
+		CP		32
 		JP		nz, error
 		XOR		a
-		LD		hl, 0
+		LD		bc, 0
 		SBC		hl, bc
 		JP		nz, error
 		
-		LD		hl, $FFD0		; sqrt(65488) = 255 (E), 463 (BC)
-		CALL	sqrt
-		LD		a, 255
-		CP		e
+		LD		hl, $FFD0		; sqrt(65488) = 255 (A), 463 (HL)
+		CALL 	sqrtHL
+		CP		255
 		JP		nz, error
 		XOR		a
-		LD		hl, 463
+		LD		bc, 463
 		SBC		hl, bc
 		JP		nz, error
+
+ 		LD		hl, $FA5F		; sqrt(64095) = 253 (A), 86 (HL)
+		CALL 	sqrtHL
+ 		CP		253
+ 		JP		nz, error
+ 		XOR		a
+ 		LD		bc, 86
+ 		SBC		hl, bc
+ 		JP		nz, error
 
 
 ;----------------------------------------------------------------------
@@ -682,6 +717,7 @@ test8:
 test9:
 		CALL 	inccnt
 		call 	start_hanoi
+
 		LD		hl, hanoir
 		LD		de, TOHMOVES
 		MEMCMP	(1<<DISKS)-1, error
@@ -692,9 +728,9 @@ test9:
 ;----------------------------------------------------------------------
 
 test10:
-		CALL 	inccnt			; $320
+		CALL 	inccnt
 		CALL 	calc_pi
-		
+
 		LD		hl, pi
 		LD		de, READABLE
 		MEMCMP	PIDIGITS, error
@@ -877,141 +913,6 @@ storeycount:
 		INC		(hl)			; increment the YF counter (HL)
 storeydone:
 		INC		hl				; point to the next entry
-		RET
-
-;==================================================================================================
-; some maths functions
-;==================================================================================================
-
-; This returns the square root of HL (rounded down).
-; Inputs:
-;	HL
-; Outputs:
-;   BC is the remainder
-;   D is not changed
-;   E is the square root
-;   H is 0
-; Destroys:
-;   A
-;   L is a value of either {0,1,4,5}
-;     every bit except 0 and 2 are always zero
-   
-sqrt:
-		LD 		bc, 0800h
-        LD 		e,c       
-        XOR 	a        
-sqrtloop:
-        ADD		hl, hl    
-        RL 		c         
-        ADC 	hl, hl    
-        RL 		c         
-        JR 		nc, sqrt1
-        SET 	0, l      
-sqrt1:  LD		a, e       
-        ADD 	a, a      
-        LD 		e, a       
-        ADD 	a, a      
-        bit		0, l      
-        JR 		nz, sqrt2
-        SUB		c        
-        JR 		nc, sqrt3
-sqrt2:  LD		a, c   
-        SUB		e    
-        INC		e    
-        SUB		e    
-        LD		c, a   
-sqrt3:  DJNZ 	sqrtloop
-        BIT		0, l      
-        RET 	z        
-        INC		b        
-        RET          
-
-; Inputs:
-;   DE and BC are factors
-; Outputs:
-;   A is 0
-;   BC is not changed
-;   DE:HL is the product
-mul16:  LD 		hl, 0
-        LD 		a, 16
-ml1:
-        ADD		hl, hl
-        RL 		e
-		RL      d
-        JR		nc, ml2
-        ADD     hl, bc
-        JR      nc, ml2
-        INC		de
-ml2:	DEC		a
-        JR 		nz, ml1
-        ret
-
-mul32:
-; uses karatsuba multiplication
-; var_x * var_y
-; z0 holds the 64-bit result
-		LD 		de, (var_x)
-		LD		bc, (var_y)
-		PUSH	bc
-		CALL 	mul16
-		LD		(var_z0), hl
-		LD		bc, (var_y+2)
-        LD		(var_z0+2), de
-		LD 		de, (var_x+2)
-        PUSH	bc
-        CALL 	mul16
-		LD 		(var_z2), hl
-		LD		(var_z2+2), de
-		XOR		a
-		LD		hl, (var_x)
-		LD		de, (var_x+2)
-		ADD		hl, de
-		RRA
-		POP		de
-		EX		(sp), hl
-		ADD		hl, de
-		POP		bc
-		EX		de, hl
-		PUSH	de
-		PUSH	bc
-		PUSH	af
-        CALL 	mul16
-		EX		de, hl
-		POP		af
-		POP		bc
-		JR		nc, m64_1	; $+3
-		ADD 	hl, bc
-m64_1:	POP		bc
-		RLA
-		JR		nc, m64_2	; $+4 - this is wrong $+5
-		ADD		hl, bc
-		ADC		a, 0
-m64_2:	EX 		de, hl
-		LD		bc, (var_z0)
-		SBC 	hl, bc
-		EX 		de, hl
-		LD		bc, (var_z0+2)
-		SBC		hl, bc
-		SBC		a, 0
-		EX		de, hl
-		LD		bc, (var_z2)
-		SBC		hl, bc
-		EX 		de, hl
-		LD		bc, (var_z2+2)
-		SBC		hl, bc
-		SBC		a, 0
-		LD		b, h
-		LD		c, l
-		LD		hl,(var_z0+2)
-		ADD		hl, de
-		LD		(var_z0+2), hl
-		LD		hl, (var_z2)
-		ADC		hl, bc
-		LD		(var_z2), hl
-		RET		nc
-		LD		hl, (var_z2+2)
-		INC		hl
-		LD		(var_z2+2), hl
 		RET
 
 ;==================================================================================================
@@ -1223,5 +1124,6 @@ testxy_00ff:
 ; Includes
 ;==================================================================================================
 
+include maths.asm
 include picalc.asm
 include towersofhanoi.asm
