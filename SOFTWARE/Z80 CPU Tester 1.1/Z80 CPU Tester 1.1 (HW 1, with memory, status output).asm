@@ -80,6 +80,7 @@ ISCMOS		EQU		$8001
 ISU880		EQU		$8002
 COUNTER		EQU		$8003
 LOCKED		EQU		$8004
+BLINKING	EQU		$8005
 
 XFYFCOUNT:	EQU		$8010	; 4 bytes
 XFCOUNT:	EQU 	$8014	; 2 bytes
@@ -184,6 +185,7 @@ start:							; program starts here
 		LD		(YFCOUNT), hl
 		LD		(XYRESULT), a
 		LD		(LOCKED), a
+		LD		(BLINKING), a
 
 ;--------------------------------------------------------------------------------------------------
 ; CHECK CMOS/NMOS / sets ISCMOS flag
@@ -743,8 +745,9 @@ test10:
 
 testsdone:
 		CALL 	prettyprint		; in case some test has destroyed the output on port B
-		JP		runninglight
-
+endloop:
+		CALL	runninglight
+		JR		endloop
 
 ;==================================================================================================
 ; STATUS: CU00tttt (C = CMOS, U = UB880, tttt = type)
@@ -768,6 +771,7 @@ ppisnotU880:
 
 		LD 		a, d			; output identification flag
 		SETLEDB	a				
+		LD		(BLINKING), a	; save pattern
 		CALL	delay
 		CALL	delay
 		RET
@@ -977,16 +981,28 @@ runninglight:
         LD      a,1				; set bit 0
         LD      b,3				; three times running light
 
-left:   SETLEDA a
-        RL      a				; lotate left
+left:   
+		SETLEDA a
+        RL      a				; rotate left
 		CALL	delay
+
+		PUSH    af
+		LD		a, (Z80TYPE)	; load type
+		CP		CPU_SHARPLH5080A
+		JR		nz, skip1
+		LD		a, (BLINKING)   ; load pattern
+		XOR		$80	
+		LD		(BLINKING),a    ; load pattern
+		SETLEDB	a
+skip1:	POP     af
+
         JR      nc, left		; all bits
-        DJNZ    left
+        DJNZ    left			; basically not necessary because "runninglight" is called endless
 
         SETLEDA 0            	; turn off all LEDs
 		CALL	delay
 
-        JP      runninglight	; continue endless
+        RET						; continue endless
 
 ;==================================================================================================
 ; NMI function
