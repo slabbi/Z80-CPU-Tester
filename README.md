@@ -7,8 +7,15 @@
 This project allows you to test a Z80 CPU.
 
 It tries
-1. to identify the CPU,
-2. to test whether the CPU is still functional
+1. to identify the CPU technology (NMOS/CMOS),
+1. to identify the CPU manufacturer,
+2. to test whether the CPU is still functional.
+
+It does not test
+* Interrupts
+* WAIT and HALT inputs signals
+* M1 and RFSH output signals
+* BUSRQ and BUSACK signals
 
 and has following features:
 * 32kb EPROM (27C256), alternatively an EEPROM can be used (AT29C256)
