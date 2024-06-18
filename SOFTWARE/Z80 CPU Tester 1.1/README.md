@@ -28,7 +28,7 @@ should be reduced.
 
 ## Display of test results
 
-### Port B:
+### Port B
 
 STATUS: `CU00tttt` (C = CMOS, U = UB880, tttt = type)
 
@@ -69,7 +69,7 @@ When "on", a U880 CPU has been detected (U880, UA880, UB880 and similar), otherw
 An identified UB880 displays `0100 0100` (Port B).
 
 
-### Port A:
+### Port A
 
 Counts the performed tests.
 
