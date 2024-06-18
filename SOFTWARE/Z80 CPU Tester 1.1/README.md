@@ -58,6 +58,8 @@ STATUS: `CU00tttt` (C = CMOS, U = UB880, tttt = type)
 * When "blinking", a CMOS CPU has been detected (`OUT (C),0 outputs $00`).
 * When "off", a NMOS CPU has been detected (`OUT (C),0 outputs $00`).
 
+Note: The Sharp LH5080A (CMOS version of LH0080A) "fails" the CMOS test, and the undocumented `OUT (C),0` instruction behaves the same way it does on NMOS CPUs. The CMOS-LED is blinking.
+
 **U880-LED (U)**
 
 When "on", a U880 CPU has been detected (U880, UA880, UB880 and similar), otherwise it is "off"
@@ -66,8 +68,6 @@ When "on", a U880 CPU has been detected (U880, UA880, UB880 and similar), otherw
 
 An identified UB880 displays `0100 0100` (Port B).
 
-Some Notes:
-- Sharp LH5080A - the CMOS Sharp Z80 variant "fails" the CMOS test, and the undocumented `OUT (C),0` instruction behaves the same way it does on NMOS CPUs. The CMOS-LED is blinking.
 
 ### Port A:
 
