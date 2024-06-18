@@ -17,7 +17,7 @@ It does not test
 * M1 and RFSH output signals
 * BUSRQ and BUSACK signals
 
-and has following features:
+The hardware has following features:
 * 32kb EPROM (27C256), alternatively an EEPROM can be used (AT29C256)
 * 32kb SRAM
 * 2 output ports (1x unidirectional, 1x read-back) with 16 LEDs
