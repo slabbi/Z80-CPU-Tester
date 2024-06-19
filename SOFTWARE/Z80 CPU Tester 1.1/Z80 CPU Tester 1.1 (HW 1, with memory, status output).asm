@@ -43,6 +43,9 @@
 ; Some math functions from https://learn.cemetech.net/index.php/Z80:Math_Routines
 ;
 ;==================================================================================================
+			Z80
+			
+HARDWARE	EQU		1			; this is "1" for hardware version 1
 
 ; some constants
 
@@ -82,11 +85,11 @@ COUNTER		EQU		$8003
 LOCKED		EQU		$8004
 BLINKING	EQU		$8005
 
-XFYFCOUNT:	EQU		$8010	; 4 bytes
-XFCOUNT:	EQU 	$8014	; 2 bytes
-YFCOUNT:	EQU 	$8016	; 2 bytes
-XYRESULT:	EQU		$8018	; 1 byte
-XY_00FF:	EQU		$8019	; 1 byte
+XFYFCOUNT:	EQU		$8010		; 4 bytes
+XFCOUNT:	EQU 	$8014		; 2 bytes
+YFCOUNT:	EQU 	$8016		; 2 bytes
+XYRESULT:	EQU		$8018		; 1 byte
+XY_00FF:	EQU		$8019		; 1 byte
 
 ; used in mul32
 
@@ -192,10 +195,16 @@ start:							; program starts here
 ;--------------------------------------------------------------------------------------------------
 
         LD      c, 0
+		XOR		a
+        OUT     (c), a			; all LEDs off (Port A and Port B)
+
 ;       out     (c),0
         defb    $ed, $71      	; CMOS = $FF; NMOS = $00
 		NOP
-		IN		a,(c)
+		IN		a, (c)			; IN a,(n) does not work, since zero flag is not set
+ifeq HARDWARE,2
+		XOR		$ff				; reading returns the inverted signal on this hardware
+endif
 
 		JP		z, isnmos		; $00, so it is NMOS
 		LD		hl, ISCMOS
@@ -748,6 +757,31 @@ testsdone:
 endloop:
 		CALL	runninglight
 		JR		endloop
+
+
+;----------------------------------------------------------------------
+; Reading from Port A, output to Port B
+;----------------------------------------------------------------------
+
+readAtoB:
+		XOR		a				; when we want to read data, ensure that transistors are off 
+        OUT     (PORTA), a
+readloop1:
+		IN		a, (PORTA)
+        OUT     (PORTB), a
+		JR      readloop1
+
+;----------------------------------------------------------------------
+; Reading from Port A, output to Port A
+;----------------------------------------------------------------------
+
+readAtoA:
+readloop2:
+		XOR		a				; when we want to read data, ensure that transistors are off 
+        OUT     (PORTA), a		; LEDs are also off
+		IN		a, (PORTA)		; now read the value
+        OUT     (PORTA), a		; and output, note that the LED will be permanently turned on/off
+		JR      readloop2
 
 ;==================================================================================================
 ; STATUS: CU00tttt (C = CMOS, U = UB880, tttt = type)
