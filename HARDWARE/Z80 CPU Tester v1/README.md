@@ -13,3 +13,7 @@ The circuit uses a 74LS574 (or 74HC(T)574). An alternative version using the 74L
 The 74LS574 can be LS or HCT (HC should work too).
 
 You can even use the 74LS573 (the 74LS574 is clocked, the 74LS573 has a latch input). They both basically do the same thing, except that with the clock the values ​​are accepted on the rising edge, with the latch on the falling edge. With the Z80 the data is present before and after the MREQ/IORQ, so both work.
+
+[My files are published under MIT license, some files have more permissive licensing.
+Please check the licence files in the relevant directories. When you are interested in
+a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
