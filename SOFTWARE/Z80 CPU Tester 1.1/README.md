@@ -109,3 +109,9 @@ Where the result bits set as follows:
 - `10` - flag most of the time set as 1
 
 Note: YF aka F.5, XF aka F.3
+
+## Examples
+
+Zilog Z84C0020PEC from a Chinese marketplace. It is a U880 (running with 10 MHz):
+
+<img src="/HARDWARE/pictures/Fake Zilog Z84C0020PEC - U880.jpg" width="200">
