@@ -1,6 +1,10 @@
 ;==================================================================================================
 ; some maths functions
 ;==================================================================================================
+; License:
+; If you share a routine that you didn't write, credit the author as best as you can 
+; (unless the author doesn't want to be credited).
+;==================================================================================================
 
 ;--------------------------------------------------------------------------------------------------
 ; Source: https://github.com/Zeda/Z80-Optimized-Routines/blob/master/math/squareroot/sqrtHL_fastest.z80

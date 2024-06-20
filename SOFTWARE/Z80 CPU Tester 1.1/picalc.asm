@@ -1,8 +1,12 @@
+;==================================================================================================
 ; Code modified from
 ; https://github.com/GmEsoft/Z80-MBC2_PiSpigot/tree/master/PiSpigot
+;
 ; Basically this code is a transposition of Stanley Rabinowitz's Pascal 
 ; implementaion of the Spigot algorithm to compute Pi.
+;
 ; Released under GPL-3.0
+;==================================================================================================
 
 calc_pi:
 	JP	SPIGOT
