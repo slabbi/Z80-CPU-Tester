@@ -75,7 +75,7 @@ Counts the performed tests.
 
 When testing is completed:
 - the number of the failed test is displayed with a blinking bit 7, or 
-- a running light shows a successfull result (no error).
+- a running light shows a successful result (no error).
 
 ## Display XF results and XF/YF counters
 
