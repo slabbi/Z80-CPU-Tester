@@ -82,7 +82,7 @@ When testing is completed:
 The XY result and the XF/XF counters can be displayed by pressing the NMI button.
 
 After pressing the NMI button, the CPU tester will - after a short time - blink three times (alternating "xxxxoooo ooooxxxx" patterns).
-Then consecutively
+Then consecutively displays
 
 - the XFRESULT (Port A)
 - the XFCOUNTER (Port B/A)
