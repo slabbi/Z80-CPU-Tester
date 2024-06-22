@@ -12,6 +12,7 @@ It tries
 3. to test whether the CPU is still functional,
 
 and helps
+
 4. to find out the max. supported clock rate.
 
 The above results will help to identify fake CPUs.
