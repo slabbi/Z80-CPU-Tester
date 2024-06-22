@@ -8,8 +8,11 @@ This project allows you to test a Z80 CPU.
 
 It tries
 1. to identify the CPU technology (NMOS/CMOS),
-1. to identify the CPU manufacturer,
-2. to test whether the CPU is still functional.
+2. to identify the CPU manufacturer,
+3. to test whether the CPU is still functional, and
+4. to find out the max. supported clock rate.
+
+The above results will help to identify fake CPUs.
 
 It does not test
 * Interrupts
