@@ -758,31 +758,6 @@ endloop:
 		CALL	runninglight
 		JR		endloop
 
-
-;----------------------------------------------------------------------
-; Reading from Port A, output to Port B
-;----------------------------------------------------------------------
-
-readAtoB:
-		XOR		a				; when we want to read data, ensure that transistors are off 
-        OUT     (PORTA), a
-readloop1:
-		IN		a, (PORTA)
-        OUT     (PORTB), a
-		JR      readloop1
-
-;----------------------------------------------------------------------
-; Reading from Port A, output to Port A
-;----------------------------------------------------------------------
-
-readAtoA:
-readloop2:
-		XOR		a				; when we want to read data, ensure that transistors are off 
-        OUT     (PORTA), a		; LEDs are also off
-		IN		a, (PORTA)		; now read the value
-        OUT     (PORTA), a		; and output, note that the LED will be permanently turned on/off
-		JR      readloop2
-
 ;==================================================================================================
 ; STATUS: CU00tttt (C = CMOS, U = UB880, tttt = type)
 ;==================================================================================================
@@ -1045,6 +1020,17 @@ skip1:	POP     af
 nmifunction:
 		SETLEDA	0				; port A off
 		SETLEDB	0				; port B off
+		
+ifeq HARDWARE,2
+		XOR		a				; when we want to read data, ensure that transistors are off 
+        OUT     (PORTA), a
+		CALL	delay
+		
+		IN		a, (PORTA)
+		CP		$ff
+		JP		nz, readAtoB	; when a line is low, jump
+endif
+		
 		CALL	delay
 		CALL	testflags
 		CALL 	testxy_00ff
@@ -1104,6 +1090,30 @@ fnmi:   SETLEDA 240				; port A = 11110000
 		CALL	delay
 
 		RET
+
+;----------------------------------------------------------------------
+; Reading from Port A, output to Port B
+;----------------------------------------------------------------------
+
+readAtoB:
+		XOR		a				; when we want to read data, ensure that transistors are off 
+        OUT     (PORTA), a
+readloop1:
+		IN		a, (PORTA)
+        OUT     (PORTB), a
+		JR      readloop1
+
+;----------------------------------------------------------------------
+; Reading from Port A, output to Port A
+;----------------------------------------------------------------------
+
+readAtoA:
+readloop2:
+		XOR		a				; when we want to read data, ensure that transistors are off 
+        OUT     (PORTA), a		; LEDs are also off
+		IN		a, (PORTA)		; now read the value
+        OUT     (PORTA), a		; and output, note that the LED will be permanently turned on/off
+		JR      readloop2
 
 ;--------------------------------------------------------------------------------------------------
 ; tests how scf affects YF and XF flags
