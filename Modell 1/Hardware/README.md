@@ -1,6 +1,6 @@
 # Z80 CPU Tester Model 1
 
-The hardware model 1 is an easy to use CPU tester.
+The Z80 CPU Tester Model 1 is an easy to use CPU tester.
 
 It has no other gimmicks and can therefore be programmed very easily.
 
