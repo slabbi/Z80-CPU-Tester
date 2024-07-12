@@ -1,6 +1,4 @@
-# Z80 CPU Tester
-
-## Z80 CPU Tester Model 1
+# Z80 CPU Tester Model 1
 
 The Z80 CPU Tester Model 1 is an easy to use CPU tester.
 
