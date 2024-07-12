@@ -57,5 +57,6 @@ The project uses [KiCAD](https://www.kicad.org/) and [zmac](http://48k.ca/zmac.h
 Zilog Z84C0020PEC from a Chinese marketplace. It is a U880 (running with 10 MHz):
 
 <img src="/_pictures/Fake Zilog Z84C0020PEC - U880.jpg" width="200">
-(picture shows hardware v1)
+(picture shows Z80 CPU Tester Model 1)
+
 
