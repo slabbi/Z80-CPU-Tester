@@ -65,4 +65,5 @@ The required firmware is stored in the SOFTWARE folder.
 Zilog Z84C0020PEC from a Chinese marketplace. It is a U880 (running with 10 MHz):
 
 <img src="/HARDWARE/pictures/Fake Zilog Z84C0020PEC - U880.jpg" width="200">
+(picture shows hardware v1)
 
