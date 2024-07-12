@@ -129,4 +129,5 @@ Zilog Z84C0020PEC from a Chinese marketplace. It is a U880 (running with 10 MHz)
 <img src="/_pictures/Fake Zilog Z84C0020PEC - U880.jpg" width="200">
 (picture shows hardware v1)
 
-[My files in that directory are published under MIT license, some files have a more permissive licensing. Please check the file header regarding the used license.]
+[My files in that directory are published under MIT license, some files have a more permissive licensing.
+Please check the file header regarding the used license.]
