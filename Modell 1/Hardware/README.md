@@ -1,12 +1,12 @@
 # Z80 CPU Tester
 
-## Hardware Version 1
+## Hardware Model 1
 
-The hardware v1 is an easy to use CPU tester.
+The hardware model 1 is an easy to use CPU tester.
 
 It has no other gimmicks and can therefore be programmed very easily.
 
-<img src="/HARDWARE/pictures/z80cputester_v1.jpg" width="400">
+<img src="/_pictures/z80cputester_v1.jpg" width="400">
 
 > [!NOTE]
 >

@@ -1,10 +1,10 @@
 # Z80 CPU Tester
 
-Version 1 for hardware v1
+## Firmware
 
-This firmware requires hardware v1 with 32kb EPROM/EEPROM and 32kb SRAM.
+This firmware requires hardware model 1 with 32kb EPROM/EEPROM and 32kb SRAM.
 
-The firmware is identical for both hardware versions (v1 and v2), only a flag at the beginning changes the version of the hardware used.
+The firmware is identical for both hardware versions (model 1 and model 2), only a flag at the beginning changes the version of the hardware used.
 
 Software features:
 - CPU identification
@@ -112,9 +112,21 @@ Where the result bits set as follows:
 
 Note: YF aka F.5, XF aka F.3
 
+## Compilation of firmware
+
+Use `zmac` to compile the assembler source:
+```
+zmac --oo cim,hex,lst <file>
+```
+The `cim`-File is a binary file that can be used to program a 27C256 EPROM or AT29C256 EEPROM.
+
+In the folders a ready to use binary can be found.
+
 ## Examples
 
 Zilog Z84C0020PEC from a Chinese marketplace. It is a U880 (running with 10 MHz):
 
-<img src="/HARDWARE/pictures/Fake Zilog Z84C0020PEC - U880.jpg" width="200">
+<img src="/_pictures/Fake Zilog Z84C0020PEC - U880.jpg" width="200">
 (picture shows hardware v1)
+
+[My files in that directory are published under MIT license, some files have a more permissive licensing. Please check the file header regarding the used license.]

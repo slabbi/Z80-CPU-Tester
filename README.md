@@ -1,6 +1,6 @@
 # Z80-CPU-Tester
 
-<img src="/HARDWARE/pictures/z80cputester_v1.jpg" width="400">
+<img src="/_pictures/z80cputester_v1.jpg" width="400">
 
 ## General info
 
@@ -64,6 +64,6 @@ The required firmware is stored in the SOFTWARE folder.
 
 Zilog Z84C0020PEC from a Chinese marketplace. It is a U880 (running with 10 MHz):
 
-<img src="/HARDWARE/pictures/Fake Zilog Z84C0020PEC - U880.jpg" width="200">
+<img src="/_pictures/Fake Zilog Z84C0020PEC - U880.jpg" width="200">
 (picture shows hardware v1)
 
