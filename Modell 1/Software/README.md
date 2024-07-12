@@ -1,10 +1,8 @@
-# Z80 CPU Tester
+# Z80 CPU Tester Model 1
 
 ## Firmware
 
-This firmware requires hardware model 1 with 32kb EPROM/EEPROM and 32kb SRAM.
-
-The firmware is identical for both hardware models (model 1 and model 2), only a flag at the beginning changes the model of the hardware used.
+This firmware requires hardware for Model 1 with 32kb EPROM/EEPROM and 32kb SRAM.
 
 Software features:
 - CPU identification
