@@ -19,4 +19,5 @@ It has no other gimmicks and can therefore be programmed very easily.
 * The circuit uses a 74LS574 (or 74HC(T)574). An alternative version using the 74LS374 (or 74HC(T)374) is also available.
 
 [The files in this directory may be used freely for personal use. **Commercial use is not permitted.**
+
 When you are interested in a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
