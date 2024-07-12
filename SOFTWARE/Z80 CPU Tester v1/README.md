@@ -1,8 +1,10 @@
 # Z80 CPU Tester
 
-Version 1.1
+Version 1 for hardware v1
 
 This firmware requires hardware v1 with 32kb EPROM/EEPROM and 32kb SRAM.
+
+The firmware is identical for both hardware versions (v1 and v2), only a flag at the beginning changes the version of the hardware used.
 
 Software features:
 - CPU identification
@@ -115,3 +117,4 @@ Note: YF aka F.5, XF aka F.3
 Zilog Z84C0020PEC from a Chinese marketplace. It is a U880 (running with 10 MHz):
 
 <img src="/HARDWARE/pictures/Fake Zilog Z84C0020PEC - U880.jpg" width="200">
+(picture shows hardware v1)
