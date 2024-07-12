@@ -6,6 +6,8 @@ The hardware v1 is an easy to use CPU tester.
 
 It has no other gimmicks and can therefore be programmed very easily.
 
+<img src="/HARDWARE/pictures/z80cputester_v1.jpg" width="400">
+
 > [!NOTE]
 >
 > Instead of the 27256 EPROM you can also use a AT29C256 EEPROM.
