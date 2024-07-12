@@ -4,7 +4,7 @@
 
 This firmware requires hardware model 1 with 32kb EPROM/EEPROM and 32kb SRAM.
 
-The firmware is identical for both hardware versions (model 1 and model 2), only a flag at the beginning changes the version of the hardware used.
+The firmware is identical for both hardware models (model 1 and model 2), only a flag at the beginning changes the model of the hardware used.
 
 Software features:
 - CPU identification

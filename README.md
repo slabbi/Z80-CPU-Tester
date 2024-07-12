@@ -52,14 +52,6 @@ and finally Frank Cringle's Z80 instruction set exerciser
 
 The project uses [KiCAD](https://www.kicad.org/) and [zmac](http://48k.ca/zmac.html).
 
-## Sub-projects
-
-The repository has been divided into several sub-projects.
-
-The required hardware files can be found in the HARDWARE folder.
-
-The required firmware is stored in the SOFTWARE folder.
-
 ## Examples
 
 Zilog Z84C0020PEC from a Chinese marketplace. It is a U880 (running with 10 MHz):
