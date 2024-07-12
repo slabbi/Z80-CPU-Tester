@@ -1,6 +1,4 @@
-# Z80 CPU Tester
-
-## Hardware model 1
+# Z80 CPU Tester Model 1
 
 The hardware model 1 is an easy to use CPU tester.
 
