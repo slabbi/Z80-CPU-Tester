@@ -31,6 +31,7 @@ The hardware has following features:
 * 16 MHz / 20 MHz switchable
 * 1, 1/2, 1/4, 1/8, 1/16 multiplicator (1-16 MHz / 1.25-20 MHz)
 * USB powered
+* THT for easy soldering
 
 This project is based on an idea of 
 * https://oshwlab.com/vitalian1980/z80-tester (Hardware, Public Domain)
