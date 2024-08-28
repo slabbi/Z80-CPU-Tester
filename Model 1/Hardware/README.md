@@ -19,3 +19,9 @@ It has no other gimmicks and can therefore be programmed very easily.
 [The files in this directory may be used freely for personal use. **Commercial use is not permitted.**
 
 When you are interested in a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
+
+## Changelog Hardware 1.x
+
+1.1 - official "github version"
+1.2 - Vcc LED added
+      Jumper "Current Measurement" added (when removed the current of the CPU can be measured)
