@@ -22,6 +22,5 @@ When you are interested in a PCB, please [contact me](https://8bit-museum.de/kon
 
 ## Changelog Hardware 1.x
 
-1.1 - official "github version"
-1.2 - Vcc LED added
-      Jumper "Current Measurement" added (when removed the current of the CPU can be measured)
+* 1.1 - official "github version"
+* 1.2 - Vcc LED added, Jumper "Current Measurement" added (when removed the current of the CPU can be measured)
