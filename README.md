@@ -30,6 +30,7 @@ The hardware has following features:
 * RESET and NMI button
 * 16 MHz / 20 MHz switchable
 * 1, 1/2, 1/4, 1/8, 1/16 multiplicator (1-16 MHz / 1.25-20 MHz)
+* Connectors for measuring CPU power consumption
 * USB powered
 * THT for easy soldering
 
