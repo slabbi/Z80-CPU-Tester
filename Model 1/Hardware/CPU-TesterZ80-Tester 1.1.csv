@@ -38,7 +38,7 @@
 "U4,U5,U6","74LS02","~","Package_DIP:DIP-14_W7.62mm_Socket_LongPads","3",""
 "U7","27256","~","Package_DIP:DIP-28_W15.24mm","1",""
 "U8","74ALS990","~","Package_DIP:DIP-20_W7.62mm_Socket_LongPads","1",""
-"U9","61256","~","Package_DIP:DIP-28_W15.24mm","1",""
+"U9","62256","~","Package_DIP:DIP-28_W15.24mm","1",""
 "U10","74LS574","~","Package_DIP:DIP-20_W7.62mm_Socket_LongPads","1",""
 "Y1","16MHz","~","Crystal:Crystal_HC49-U_Vertical","1",""
 "Y2","20MHz","~","Crystal:Crystal_HC49-U_Vertical","1",""
