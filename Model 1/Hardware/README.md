@@ -25,9 +25,7 @@ It has no other gimmicks and can therefore be programmed very easily.
 
 * The SRAM is a standard 32k x 8, e.g. 61256, 62256, 51256, 43256 or others.
 
-[The files in this directory may be used freely for personal use. **Commercial use is not permitted.**
-
-When you are interested in a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
+[The files in this directory may be used freely for personal use. **Commercial use is not permitted.** When you are interested in a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
 
 ## Changelog Hardware 1.x
 
