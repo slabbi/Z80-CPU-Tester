@@ -8,7 +8,7 @@ It has no other gimmicks and can therefore be programmed very easily.
 
 ## Some notes:
 
-* If you want to test at 20 MHz, use fast memory components (normally you don't have to worry about it).
+* If you want to test at 20 MHz, use fast memory components (normally you don't have to worry about it), e.g 70ns or faster.
 
 ### 74LS574
 
