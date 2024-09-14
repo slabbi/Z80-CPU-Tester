@@ -10,6 +10,10 @@ It has no other gimmicks and can therefore be programmed very easily.
 
 * If you want to test at 20 MHz, use fast memory components (normally you don't have to worry about it), e.g 70ns or faster.
 
+### 74HC04
+
+* The 74HC04 can be a HC or HCU type (HCT should also work but is untested).
+
 ### 74LS574
 
 * The 74LS574 can be a LS or HCT type (HC should work too).
