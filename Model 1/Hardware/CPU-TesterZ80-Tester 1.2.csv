@@ -31,7 +31,7 @@
 "R16,R17","10K","~","Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal","2",""
 "SW1","NMI","~","Button_Switch_THT:SW_PUSH_6mm","1",""
 "SW2","RESET","~","Button_Switch_THT:SW_PUSH_6mm","1",""
-"SW3","ON/OFF","~","8bit-museum:Sub-SPDT_Switch_On-On","1",""
+"SW3","ON/OFF","~","8bit-museum:Sub-SPDT_Switch_On-On (SMTS-102)","1",""
 "U1","74LS393","~","Package_DIP:DIP-14_W7.62mm_Socket_LongPads","1",""
 "U2","74HC04","~","Package_DIP:DIP-14_W7.62mm_Socket_LongPads","1",""
 "U3","Z80CPU","~","8bit-museum:DIP_Socket-40_W11.9_W12.7_W15.24_W17.78_W18.5_3M_240-1280-00-0602J","1",""
