@@ -8,6 +8,8 @@ Software features:
 - CPU identification
 - tests the functionality of a few commands (these tests are not really thorough and well thought out and should only be considered as proof of concept) and executes some more complex routines
 
+A compiled firmware file is available ("*.bin").
+
 ## Performed tests
 
 Following tests are performed:
