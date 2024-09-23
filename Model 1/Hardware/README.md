@@ -12,7 +12,7 @@ It has no other gimmicks and can therefore be programmed very easily.
 
 ### 74HC04
 
-* The 74HC04 can be a HC or HCU type (HCT should also work but is untested).
+* The 74HC04 can be a HC or HCU type (HCT can work but usually it is not recommended). The 74HCU04 is the best choice for the Pierce Oscillator but when you don't already have it try a 74HC04 first.
 
 ### 74LS574
 
