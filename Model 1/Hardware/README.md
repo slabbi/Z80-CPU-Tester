@@ -22,7 +22,7 @@ It has no other gimmicks and can therefore be programmed very easily.
 
 ### 27C256
 
-* Instead of the 27256 EPROM you can also use a AT29C256.
+* Instead of the 27256 EPROM you can also use an AT29C256.
 * You can also use a Winbond W27C512. Note that Pin 1 is connected to Vcc, so when using a W27C512 you have to program the firmware at address 0x8000.
 
 ### SRAM 32k x 8
