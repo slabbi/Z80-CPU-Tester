@@ -21,7 +21,7 @@
 ;   0010 - Z280
 ;   0011 - EZ80 
 ;   0100 - U880 (newer; MME U880, Thesys Z80, Microelectronica MMN 80CPU)
-;   0101 - U880 (older; MME U880)
+;   0101 - U880 (older; MME U880, KR1858VM1)
 ;   0110 - SHARP LH5080
 ;   0111 - NMOS Z80 (Zilog Z80, Zilog Z08400 or similar NMOS CPU, Mosstek MK3880N, SGS/ST Z8400, Sharp LH0080A, KR1858VM1)
 ;   1000 - NEC D780C (NEC D780C, GoldStar Z8400, possibly KR1858VM1)
@@ -30,7 +30,7 @@
 ;   1011 - CMOS Z80 (Zilog Z84C00)
 ;   1100 - Toshiba Z80 (Toshiba TMPZ84C00AP, ST Z84C00AB)
 ;   1101 - NEC D70008AC
-;   1110 - Unknown CMOS Z80 Clone
+;   1110 - ST Z84C00AB6
 ;   1111 - NEC Z80 Clone (NMOS)
 ; An identified UB880 displays [01 00 0100}.
 ;
@@ -63,7 +63,7 @@ CPU_NMOSUNKNOWN		EQU		10
 CPU_CMOSZ80			EQU		11
 CPU_TOSHIBA			EQU		12
 CPU_NECD70008AC		EQU		13
-CPU_CMOSUNKNOWN		EQU		14
+CPU_STZ84C00AB6		EQU		14
 CPU_NEC_CL			EQU		15
 CPU_ERROR			EQU		16
 
@@ -352,18 +352,18 @@ checkcmos:
 		JR		z, TOSHIBA
 
 		CP		$20				; YF is often set when A.5=1?
-		JR		nc, CMOSUNKNOWN	; XYRESULT > $1F, not a NEC...
+		JR		nc, STZ84C00AB6	; XYRESULT > $1F, not a NEC...
 ;		XFRESULT <= $1F
 		AND		$0f				; F.5=1 & A.5=0 and F.3=1 & A.3=0 results
 		CP		$03				; F.5=1 & A.5=0 never result in YF set?
-		JR		c, CMOSUNKNOWN  ; XYRESULT <= $02, not a NEC... ($02, $01, $00)
+		JR		c, STZ84C00AB6  ; XYRESULT <= $02, not a NEC... ($02, $01, $00)
 ; here we have following results ($03, 04, ..., 1f)
 		AND		$03				; F.3=1 & A.3=0 results
 		JR		nz, NEC			; XYRESULT <> $03, it is a NEC... ($x0, $x1, $x2)
 ; here we have following results ($03, $0B)
 
-CMOSUNKNOWN:	
-		LD 		d, CPU_CMOSUNKNOWN
+STZ84C00AB6:	
+		LD 		d, CPU_STZ84C00AB6
 		JP		iddone
 CMOSZ80:
 		LD 		d, CPU_CMOSZ80
