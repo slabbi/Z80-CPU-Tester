@@ -41,7 +41,7 @@ STATUS: `CU00tttt` (C = CMOS, U = UB880, tttt = type)
 0010 - Z280
 0011 - EZ80 
 0100 - U880 (newer; MME U880, Thesys Z80, Microelectronica MMN 80CPU)
-0101 - U880 (older; MME U880)
+0101 - U880 (older; MME U880, KR1858VM1)
 0110 - SHARP LH5080
 0111 - NMOS Z80 (Zilog Z80, Zilog Z08400 or similar NMOS CPU, Mosstek MK3880N, SGS/ST Z8400, Sharp LH0080A, KR1858VM1)
 1000 - NEC D780C (NEC D780C, GoldStar Z8400, possibly KR1858VM1)
