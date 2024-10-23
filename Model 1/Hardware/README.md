@@ -35,3 +35,4 @@ It has no other gimmicks and can therefore be programmed very easily.
 
 * 1.1 - official "github version"
 * 1.2 - Vcc LED added, Jumper "Current Measurement" added (when removed the current of the CPU can be measured)
+* 1.3 - 5mm smaller PCB, available from the developer only (BOM is identical with hardware 1.2)
