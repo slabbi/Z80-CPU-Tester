@@ -24,7 +24,7 @@ It does not test
 * BUSRQ and BUSACK signals
 
 The hardware has following features:
-* 32kb EPROM (27C256), alternatively an EEPROM can be used (AT29C256)
+* 32kb EPROM (27C256), alternatively AT29C256 Flash Memory can be used (an AT28C256 is *not* pin compatible)
 * 32kb SRAM
 * 2 output ports (1x unidirectional, 1x read-back) with 16 LEDs
 * RESET and NMI button
