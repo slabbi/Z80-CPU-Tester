@@ -13,6 +13,7 @@ It has no other gimmicks and can therefore be programmed very easily.
 ### 74HC04
 
 * The 74HC04 can be a HC or HCU type (HCT can work but usually it is not recommended). The 74HCU04 is the best choice for the Pierce Oscillator but when you don't already have it try a 74HC04 first.
+* When you have problems with the 16/20 MHz clock (can be measured at pin 1/3 of JP1), replace R4 (for 20 MHz) and/or R3 (for 16 MHz) with 100 Ohm (instead of 1k Ohm).
 
 ### 74LS574
 
