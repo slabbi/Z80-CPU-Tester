@@ -4,7 +4,7 @@
 
 ## General info
 
-This project allows you to test a Z80 CPU.
+This project allows you to test a Z80 CPU. Two models are currently available. Both function essentially the same and use the same code except for one line. "Model 1" uses a less common 74ALS990, which, while not easy to obtain, is quite practical to use. "Model 2" replaces this IC with two more common ones and adds some pin headers for your own experiments.
 
 It tries
 1. to identify the CPU technology (NMOS/CMOS),
