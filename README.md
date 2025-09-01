@@ -19,8 +19,8 @@ The above results will help to identify fake CPUs.
 
 It does not test
 * Interrupts
-* WAIT and HALT inputs signals
-* M1 and RFSH output signals
+* WAIT and HALT signals
+* M1 and RFSH signals
 * BUSRQ and BUSACK signals
 
 The hardware has following features:
