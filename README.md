@@ -1,6 +1,6 @@
 # (Yet another) Z80 CPU Tester
 
-<img src="/_pictures/z80cputester_v1.jpg" width="400"><img src="/_pictures/z80cputester_v2.jpg" width="400">
+<img src="/_pictures/z80cputester_v1.jpg" height="400"><img src="/_pictures/z80cputester_v2.jpg" height="400">
 
 ## General info
 
