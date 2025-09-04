@@ -124,6 +124,14 @@ The `cim`-File is a binary file that can be used to program a 27C256 EPROM or AT
 
 In the folders a ready to use binary can be found.
 
+## Using the Input/Output ports
+
+If one of the input pins (port A) is pulled down (connected to GND) after NMI is pushed, the firmware starts an infinite loop that 
+reads a pattern from port A and outputs that pattern to port B. The corresponding code is found at the beginning of "nmifunction" 
+(checks if an input is pulled down) and "readAtoB" (reads from port A and outputs to port B). 
+
+The ports can be used to control external hardware, e.g. a display.
+
 ## Examples
 
 Zilog Z84C0020PEC from a Chinese marketplace. It is a U880 (running with 10 MHz):
