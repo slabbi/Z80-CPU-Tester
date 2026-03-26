@@ -10,7 +10,7 @@ It is a little bit more complex to program because the signal is inverted when r
 ## Some notes:
 
 * If you want to test at 20 MHz, use fast memory components (normally you don't have to worry about it), e.g 70ns or faster.
-* When you do not want to do experiements with the inout and output ports, you must not assemble: J1, J2 (input port); J3, J13 (output ports); J12, J14, J15 (Power).
+* When you do not want to do experiements with the input and output ports, you must not assemble: J1, J2 (input port); J3, J13 (output ports); J12, J14, J15 (Power).
 
 ### 74HC04
 
