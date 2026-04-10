@@ -26,6 +26,9 @@ It is a little bit more complex to program because the signal is inverted when r
 * The 74LS573 can be LS or HCT (HC should work too).
 * The 74LS573 *cannot* be replaced by a 74LS574.
 
+### 74LS393
+* If you are having problems with the clock speed (the LS should work fine up to 20 MHz), use an HC type (should work fine up to 25 MHz).
+
 ### 27C256
 
 * Instead of the 27256 EPROM you can also use an AT29C256 Flash Memory (the AT28C256 is *not* pin compatible).
