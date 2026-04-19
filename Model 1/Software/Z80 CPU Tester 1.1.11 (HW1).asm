@@ -209,6 +209,7 @@ endif
 		JP		z, isnmos		; $00, so it is NMOS
 		LD		hl, ISCMOS
 		LD		(hl), $ff
+
 isnmos:
 		SETLEDA 0
 		
