@@ -15,16 +15,16 @@ A compiled firmware file is available ("*.bin").
 ## Performed tests
 
 Following tests are performed:
-1. memory access, load 16 bit register load
-2. RL, RR, load register to register
-3. ADD, SUB
-4. PUSH, POP, SBC
-5. ADD, SUB, INC, DEC
-6. some 16 bit multiplications (ADD, RL)
-7. some 32 bit multiplications (ADD, ADC, SBC, PUSH, POP, RRA, EX)
-8. calculates some square roots (BIT, RL, ADD, SUB)
-9. plays Towers of Hanoi (PUSH, POP, CALL)
-10. calculates Pi (EX, EXX, IX, IY, INC, DEC, ADD, ADC, SBC, SRL, RR, PUSH, CALL)
+1. Memory access & 16-bit loads
+2. Bit rotations
+3. ADD/SUB operations
+4. PUSH/POP & 16-bit SBC
+5. INC/DEC combinations
+6. 16-bit multiplication
+7. 64-bit multiplication (Karatsuba)
+8. Square root calculation
+9. Towers of Hanoi recursion test
+10. Pi calculation (100 digits)
 
 Pi is calculated to 100 digits. This takes about 30 seconds at 4 Mhz.
 When you test CPUs at lower speeds the number of calculated digits
@@ -131,6 +131,35 @@ reads a pattern from port A and outputs that pattern to port B. The correspondin
 (checks if an input is pulled down) and "readAtoB" (reads from port A and outputs to port B). 
 
 The ports can be used to control external hardware, e.g. a display.
+
+## Some notes
+
+### XF/YF Flag Analysis
+
+Tests how the Set Carry Flag (SCF) instruction affects the undocumented XF (Flag.3) and YF (Flag.5) flags. Different CPUs behave differently:
+- Zilog Z80: Consistent pattern ($28)
+- NEC clones: Different pattern ($20 or $00)
+- U880/KR1858VM1: Special patterns
+This is the core differentiator for clone detection.
+
+### Mathematical Routines (maths.asm)
+
+sqrtHL: Fast square root from Zeda Z80-Optimized-Routines
+- Uses binary search with bit manipulations
+- Returns sqrt in A, remainder in HL
+
+mul16: 16-bit multiplication (DE × BC → DE:HL)
+- Uses repeated ADD and rotate operations
+
+mul32: 64-bit multiplication using Karatsuba algorithm
+- Splits operands into high/low halves
+- More efficient than naive O(n²) approach
+
+### Notable Features
+
+1. Undocumented Instruction Usage: Uses CPU quirks to identify variants (e.g., OUT (C),0, LD E,E)
+2. NMI Button Interface: Allows runtime inspection of XF/YF counters
+3. Non-Invasive Identification: Doesn't corrupt CPU state during detection
 
 ## Examples
 
