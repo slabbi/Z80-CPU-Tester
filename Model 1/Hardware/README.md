@@ -35,6 +35,10 @@ It has no other gimmicks and can therefore be programmed very easily.
 
 [The files in this directory may be used freely for personal use. **Commercial use is not permitted.** When you are interested in a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
 
+## ERRATA PCB v1.x
+
+I mistakenly added a pull-up resistor (4.7k, R20) to the /HALT signal, even though it's an output. While this doesn't cause any harm, as pull-ups are often used in circuits for stability, it's not necessary here, so R20 doesn't need to be assembled.
+
 ## Changelog Hardware 1.x
 
 * 1.1 - official "github version"
