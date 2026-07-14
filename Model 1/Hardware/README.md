@@ -33,8 +33,6 @@ It has no other gimmicks and can therefore be programmed very easily.
 
 * The SRAM is a standard 32k x 8, e.g. 61256, 62256, 51256, 43256 or others.
 
-[The files in this directory may be used freely for personal use. **Commercial use is not permitted.** When you are interested in a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
-
 ## ERRATA PCB v1.x
 
 I mistakenly added a pull-up resistor (4.7k, R20) to the /HALT signal, even though it's an output. While this doesn't cause any harm, as pull-ups are often used in circuits for stability, it's not necessary here, so R20 doesn't need to be assembled.
@@ -44,3 +42,6 @@ I mistakenly added a pull-up resistor (4.7k, R20) to the /HALT signal, even thou
 * 1.1 - official "github version"
 * 1.2 - Vcc LED added, Jumper "Current Measurement" added (when removed the current of the CPU can be measured)
 * 1.3 - 5mm smaller PCB, available from the developer only (BOM is identical with hardware 1.2)
+
+[The files in this directory may be used freely for personal use. **Commercial use is not permitted.** When you are interested in a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
+
