@@ -51,3 +51,5 @@ I mistakenly added a pull-up resistor (4.7k, R28) to the /HALT signal, even thou
 * 2.5 - official "github version"
 
 [The files in this directory may be used freely for personal use. **Commercial use is not permitted.** When you are interested in a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
+
+
