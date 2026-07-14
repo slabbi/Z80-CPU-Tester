@@ -40,6 +40,10 @@ It is a little bit more complex to program because the signal is inverted when r
 
 [The files in this directory may be used freely for personal use. **Commercial use is not permitted.** When you are interested in a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
 
+### Other components
+
+* The switch is a standard SMTS-102 (usually these have 3A, 125v).
+
 ## ERRATA PCB v2.5 (only)
 
 I mistakenly added a pull-up resistor (4.7k, R28) to the /HALT signal, even though it's an output. While this doesn't cause any harm, as pull-ups are often used in circuits for stability, it's not necessary here, so R28 doesn't need to be assembled.
