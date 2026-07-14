@@ -122,7 +122,7 @@ zmac --oo cim,hex,lst <file>
 ```
 The `cim`-File is a binary file that can be used to program a 27C256 EPROM or AT29C256 EEPROM.
 
-In the folders a ready to use binary can be found.
+In the folders a ready to use binary can be found. The compiler can be downloaded from https://48k.ca/zmac.html
 
 ## Using the Input/Output ports
 
