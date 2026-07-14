@@ -38,8 +38,6 @@ It is a little bit more complex to program because the signal is inverted when r
 
 * The SRAM is a standard 32k x 8, e.g. 61256, 62256, 51256, 43256 or others.
 
-[The files in this directory may be used freely for personal use. **Commercial use is not permitted.** When you are interested in a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
-
 ### Other components
 
 * The switch is a standard SMTS-102 (usually these have 3A, 125v).
@@ -51,3 +49,5 @@ I mistakenly added a pull-up resistor (4.7k, R28) to the /HALT signal, even thou
 ## Changelog Hardware 2.x
 
 * 2.5 - official "github version"
+
+[The files in this directory may be used freely for personal use. **Commercial use is not permitted.** When you are interested in a PCB, please [contact me](https://8bit-museum.de/kontakt/).]
